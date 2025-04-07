@@ -32,15 +32,23 @@
   },
   "devDependencies": {
     "ava": "^6.2.0",
-    "browser-ava": "^2.3.15",
+    "browser-ava": "^2.3.16",
     "c8": "^10.1.3",
     "documentation": "^14.0.3",
     "semantic-release": "^24.2.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "engines": {
     "node": ">=22.14.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arlac77/ip-utilties.git"
+  },
+  "bugs": {
+    "url": "https://github.com/arlac77/ip-utilties/issues"
+  },
+  "homepage": "https://github.com/arlac77/ip-utilties#readme",
   "template": {
     "inheritFrom": [
       "arlac77/template-arlac77-github",

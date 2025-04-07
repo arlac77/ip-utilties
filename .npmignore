@@ -1,0 +1,8 @@
+tsconfig.json
+build
+tests
+doc
+*.log
+*.tmp
+.vscode
+.github
