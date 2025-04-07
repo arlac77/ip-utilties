@@ -5,7 +5,6 @@ on:
   push:
     paths:
       - src/*
-  workflow_dispatch: null
 jobs:
   update_readme_api:
     runs-on: ubuntu-latest
