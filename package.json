@@ -11,6 +11,13 @@
     }
   },
   "description": "ip v4/v6 utility functions",
+  "keywords": [
+    "ip",
+    "ipv4",
+    "ipv6",
+    "network",
+    "subnet"
+  ],
   "contributors": [
     {
       "name": "Markus Felten",
