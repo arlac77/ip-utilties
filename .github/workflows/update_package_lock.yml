@@ -1,0 +1,43 @@
+name: Update package lock
+on:
+  push:
+    paths:
+      - package.json
+  schedule:
+    - cron: 13 8 * * 6
+  workflow_dispatch: null
+jobs:
+  update_package_lock:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 22.14.0
+        browser:
+          - chrome
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4.2.2
+      - name: prepare node
+        uses: actions/setup-node@v4.3.0
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: remove lock
+        run: rm package-lock.json
+      - name: install playwright
+        run: npx playwright install
+      - name: test
+        run: npm install-test
+        env:
+          BROWSER: ${{ matrix.browser }}
+      - name: create pull request
+        uses: gr2m/create-or-update-pull-request-action@v1.10.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: package-lock.json
+          title: Regenerate package lock
+          body: bring lock in sync
+          branch: package-lock
+          labels: npm
+          commit-message: "chore(deps): lock"
