@@ -1,1 +1,53 @@
-{}
+{
+  "name": "ip-utilties",
+  "version": "0.0.0-semantic-release",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "exports": {
+    ".": {
+      "default": "./src/ip.mjs"
+    }
+  },
+  "description": "ip v4/v6 utility functions",
+  "contributors": [
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ],
+  "license": "0BSD",
+  "scripts": {
+    "prepare": "node --run prepare:typescript",
+    "prepare:typescript": "tsc --allowJs --declaration --emitDeclarationOnly --declarationDir types --resolveJsonModule --target es2024 --lib esnext -m esnext --module nodenext --moduleResolution nodenext --rootDir src ./src**/*.mjs",
+    "test": "node --run test:browser-ava && node --run test:ava",
+    "test:browser-ava": "browser-ava --headless --no-keep-open tests/*-ava.mjs tests/*-ava-browser.mjs",
+    "test:ava": "ava --timeout 4m tests/*-ava.mjs tests/*-ava-node.mjs",
+    "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 4m tests/*-ava.mjs tests/*-ava-node.mjs && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
+    "docs": "documentation readme --section=API ./src**/*.mjs",
+    "lint": "node --run lint:docs && node --run lint:typescript",
+    "lint:docs": "documentation lint ./src**/*.mjs",
+    "lint:typescript": "tsc --allowJs --checkJs --noEmit --resolveJsonModule --target es2024 --lib esnext -m esnext --module nodenext --moduleResolution nodenext ./src**/*.mjs"
+  },
+  "devDependencies": {
+    "ava": "^6.2.0",
+    "browser-ava": "^2.3.15",
+    "c8": "^10.1.3",
+    "documentation": "^14.0.3",
+    "semantic-release": "^24.2.3",
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "template": {
+    "inheritFrom": [
+      "arlac77/template-arlac77-github",
+      "arlac77/template-browser-ava",
+      "arlac77/template-javascript-component",
+      "arlac77/template-node-component",
+      "arlac77/template-typescript"
+    ]
+  }
+}
