@@ -44,8 +44,13 @@ test(isIPv6T, IPV4_LOCALHOST, false);
 test(isIPv4T, IPV6_LOCALHOST, false);
 test(isIPv6T, IPV6_LOCALHOST, true);
 
+test(isIPv4T, "1.2.3.4", true);
+test(isIPv4T, new Uint8Array([1,2,3,4]), true);
+test.failing(isIPv4T, "1.2.3", false);
+test(isIPv4T, new Uint8Array([1,2,3]), false);
 test(isIPv4T, "f:b:a:3::", false);
 test(isIPv6T, "f:b:a:3::", true);
+test.failing(isIPv6T, "f:b:a:3:0:0", false);
 
 function isLocalhostT(t, address, expected) {
   t.is(isLocalhost(address), expected);
@@ -225,7 +230,6 @@ normalizeIP_T.title = (providedTitle = "normalizeIP", address, expected) =>
 test(normalizeIP_T, "0000::a", "::a");
 test(normalizeIP_T, "1.2.3.04", "1.2.3.4");
 
-
 function reverseArpaT(t, address, expected) {
   t.is(reverseArpa(address), expected);
 }
@@ -326,9 +330,9 @@ rangeIPT.title = (
 ) =>
   `${providedTitle} ${address}/${prefix} [${l},${u}] => ${expectedFrom} - ${expectedTo}`.trim();
 
-test(rangeIPT, "192.168.1.7",  24, 0, 0, "192.168.1.0", "192.168.1.255");
-test(rangeIPT, "192.168.1.7",  24, 1, 0, "192.168.1.1", "192.168.1.255");
-test(rangeIPT, "192.168.1.7",  16, 0, 0, "192.168.0.0", "192.168.255.255");
+test(rangeIPT, "192.168.1.7", 24, 0, 0, "192.168.1.0", "192.168.1.255");
+test(rangeIPT, "192.168.1.7", 24, 1, 0, "192.168.1.1", "192.168.1.255");
+test(rangeIPT, "192.168.1.7", 16, 0, 0, "192.168.0.0", "192.168.255.255");
 test(rangeIPT, "192.168.1.61", 30, 0, 0, "192.168.1.60", "192.168.1.63");
 test(rangeIPT, "fe80::", 64, 0, 0, "fe80::", "fe80::ffff:ffff:ffff:ffff");
 test(rangeIPT, "fe80::", 96, 0, 0, "fe80::", "fe80::ffff:ffff");
