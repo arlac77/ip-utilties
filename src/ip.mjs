@@ -191,16 +191,10 @@ function _asBigInt(definition, address) {
     return address;
   }
 
-  const ea = _encode(definition, address);
-
-  let result = 0n;
-
-  for (let i = 0; i < ea.length; i++) {
-    result = result << BigInt(definition.segmentLength);
-    result += BigInt(ea[i]);
-  }
-
-  return result;
+  return _encode(definition, address).reduce(
+    (a, c) => (a << BigInt(definition.segmentLength)) + BigInt(c),
+    0n
+  );
 }
 
 function _encodeBigInt(definition, address) {
@@ -232,7 +226,10 @@ export function rangeIP(address, prefix, lowerAdd = 0, upperReduce = 0) {
   const from = _prefix(definition, address, prefix);
   const to = from | ((1n << BigInt(definition.bitLength - prefix)) - 1n);
 
-  return [_encode(definition, from + BigInt(lowerAdd)), _encode(definition, to - BigInt(upperReduce))];
+  return [
+    _encode(definition, from + BigInt(lowerAdd)),
+    _encode(definition, to - BigInt(upperReduce))
+  ];
 }
 
 export function normalizeCIDR(address) {
