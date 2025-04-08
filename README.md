@@ -18,9 +18,9 @@ ip v4/v6 utility functions
 
 With [npm](http://npmjs.org) do:
 
-    ```shell
+```shell
 npm install ip-utilties
-    ```
+```
 
 # license
 
