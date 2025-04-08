@@ -216,6 +216,16 @@ test(decodeIPv6T, new Uint16Array([0, 0, 0, 0, 0, 0, 0, 0x000a]), "::a");
 
 test(decodeIPv6T, 0x000an, "::a");
 
+function normalizeIP_T(t, address, expected) {
+  t.is(normalizeIP(address), expected);
+}
+normalizeIP_T.title = (providedTitle = "normalizeIP", address, expected) =>
+  `${providedTitle} ${address} => ${expected}`.trim();
+
+test(normalizeIP_T, "0000::a", "::a");
+test(normalizeIP_T, "1.2.3.04", "1.2.3.4");
+
+
 function reverseArpaT(t, address, expected) {
   t.is(reverseArpa(address), expected);
 }
