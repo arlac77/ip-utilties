@@ -62,7 +62,7 @@ export function encodeIPv4(address) {
   return _encode(ipv4, address);
 }
 
-export function _encode(definition, address) {
+function _encode(definition, address) {
   switch (typeof address) {
     case "string":
       const res = new definition.factory(definition.segments);
@@ -167,7 +167,7 @@ function _definition(address) {
   }
 }
 
-export function _is(definition, address) {
+function _is(definition, address) {
   switch (typeof address) {
     case "string":
       return address.indexOf(definition.separator) >= 0;
@@ -219,7 +219,7 @@ export function prefixIP(address, length) {
   return _decode(definition, _prefix(definition, address, length));
 }
 
-export function _prefix(definition, address, length) {
+function _prefix(definition, address, length) {
   return (
     _asBigInt(definition, address) &
     (definition.mask << BigInt(definition.bitLength - length))
@@ -283,7 +283,7 @@ export function normalizeIP(address) {
 export function reverseArpa(address) {
   if (isIPv6(address)) {
     const ea = encodeIPv6(address);
-    let result = [];
+    const result = [];
     for (let i = 0; i < ea.length; i++) {
       const v = ea[i];
       for (let i = 0; i < 4; i++) {
