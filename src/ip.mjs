@@ -5,7 +5,6 @@ const ipv4 = {
   },
   separator: ".",
   bitLength: 32,
-  byteLength: 4,
   segments: 4,
   segmentLength: 8,
   segmentMask: 0xffn,
@@ -25,7 +24,6 @@ const ipv6 = {
   separator: ":",
   compressor: "::",
   bitLength: 128,
-  byteLength: 8,
   segments: 8,
   segmentLength: 16,
   segmentMask: 0xffffn,
@@ -80,7 +78,7 @@ function _encode(definition, address) {
     case "object":
       if (
         address instanceof definition.factory &&
-        address.length === definition.byteLength
+        address.length === definition.segments
       ) {
         return address;
       }
@@ -169,7 +167,7 @@ function _is(definition, address) {
     case "object":
       return (
         address instanceof definition.factory &&
-        address.length === definition.byteLength
+        address.length === definition.segments
       );
   }
 

@@ -39,15 +39,30 @@ isIPv6T.title = (providedTitle = "isIPv6", address, expected) =>
   `${providedTitle} ${address} => ${expected}`.trim();
 
 test(isIPv4T, IPV4_LOCALHOST, true);
+test("Uint8Array 127.0.0.1", isIPv4T, new Uint8Array([127, 0, 0, 1]), true);
+test("Uint8Array 127.0.0.1", isIPv6T, new Uint8Array([127, 0, 0, 1]), false);
+
 test(isIPv6T, IPV4_LOCALHOST, false);
 
 test(isIPv4T, IPV6_LOCALHOST, false);
 test(isIPv6T, IPV6_LOCALHOST, true);
+test(
+  "Uint16Array ::1",
+  isIPv4T,
+  new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]),
+  false
+);
+test(
+  "Uint16Array ::1",
+  isIPv6T,
+  new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]),
+  true
+);
 
 test(isIPv4T, "1.2.3.4", true);
-test(isIPv4T, new Uint8Array([1,2,3,4]), true);
+test(isIPv4T, new Uint8Array([1, 2, 3, 4]), true);
 test.failing(isIPv4T, "1.2.3", false);
-test(isIPv4T, new Uint8Array([1,2,3]), false);
+test(isIPv4T, new Uint8Array([1, 2, 3]), false);
 test(isIPv4T, "f:b:a:3::", false);
 test(isIPv6T, "f:b:a:3::", true);
 test.failing(isIPv6T, "f:b:a:3:0:0", false);
