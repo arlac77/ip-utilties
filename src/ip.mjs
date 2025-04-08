@@ -181,7 +181,7 @@ function _is(definition, address) {
 }
 
 export function asBigInt(address) {
-  return _asBigInt(isIPv4(address) ? ipv4 : ipv6, address);
+  return _asBigInt(_definition(address), address);
 }
 
 function _asBigInt(definition, address) {
@@ -207,7 +207,7 @@ function _encodeBigInt(definition, address) {
 }
 
 export function prefixIP(address, length) {
-  const definition = isIPv4(address) ? ipv4 : ipv6;
+  const definition = _definition(address);
   return _decode(definition, _prefix(definition, address, length));
 }
 
@@ -219,11 +219,9 @@ function _prefix(definition, address, length) {
 }
 
 export function rangeIP(address, prefix, lowerAdd = 0, upperReduce = 0) {
-  const definition = isIPv4(address) ? ipv4 : ipv6;
-
+  const definition = _definition(address);
   const from = _prefix(definition, address, prefix);
   const to = from | ((1n << BigInt(definition.bitLength - prefix)) - 1n);
-
   return [
     _encode(definition, from + BigInt(lowerAdd)),
     _encode(definition, to - BigInt(upperReduce))
