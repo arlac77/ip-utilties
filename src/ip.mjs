@@ -244,8 +244,8 @@ export function normalizeCIDR(address) {
   };
 }
 
-export function formatCIDR(address, subnet) {
-  return subnet ? `${address}/${subnet.prefixLength}` : address;
+export function formatCIDR(address, prefixLength) {
+  return prefixLength ? `${decodeIP(address)}/${prefixLength}` : address;
 }
 
 export function normalizeIP(address) {

@@ -15,6 +15,7 @@ import {
   normalizeIP,
   prefixIP,
   normalizeCIDR,
+  formatCIDR,
   rangeIP,
   reverseArpa,
   IPV4_LOCALHOST,
@@ -351,3 +352,12 @@ test(rangeIPT, "192.168.1.7", 16, 0, 0, "192.168.0.0", "192.168.255.255");
 test(rangeIPT, "192.168.1.61", 30, 0, 0, "192.168.1.60", "192.168.1.63");
 test(rangeIPT, "fe80::", 64, 0, 0, "fe80::", "fe80::ffff:ffff:ffff:ffff");
 test(rangeIPT, "fe80::", 96, 0, 0, "fe80::", "fe80::ffff:ffff");
+
+function formatCIDRT(t, address, prefixLength, expected) {
+  t.is(formatCIDR(address, prefixLength), expected);
+}
+formatCIDRT.title = (providedTitle = "formatCIDR", address, cidr) =>
+  `${providedTitle} ${address} => ${cidr}`.trim();
+
+test(formatCIDRT, "192.168.1.62", 30, "192.168.1.62/30");
+test(formatCIDRT, encodeIP("192.168.1.62"), 30, "192.168.1.62/30");
