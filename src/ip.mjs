@@ -30,21 +30,6 @@ const ipv6 = {
   base: 16
 };
 
-export function IPV4(...args) {
-  return _create(ipv4, ...args);
-}
-
-export function IPV6(...args) {
-  return _create(ipv6, ...args);
-}
-
-function _create(definition, ...args) {
-  if (args.length === 1) {
-    return _encode(definition, args[0]);
-  }
-  return new definition.factory(args);
-}
-
 export function encodeIP(address) {
   const d = _definition(address);
   return d && _encode(d, address);
