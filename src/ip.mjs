@@ -9,7 +9,6 @@ const ipv4 = {
   segments: 4,
   segmentLength: 8,
   segmentMask: 0xffn,
-  mask: 0xffffffffn,
   base: 10
 };
 
@@ -30,7 +29,6 @@ const ipv6 = {
   segments: 8,
   segmentLength: 16,
   segmentMask: 0xffffn,
-  mask: 0xffffffffffffffffffffffffffffffffn,
   base: 16
 };
 
@@ -216,7 +214,7 @@ export function prefixIP(address, length) {
 function _prefix(definition, address, length) {
   return (
     _asBigInt(definition, address) &
-    (definition.mask << BigInt(definition.bitLength - length))
+    (-1n << BigInt(definition.bitLength - length))
   );
 }
 
