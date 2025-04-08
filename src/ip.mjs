@@ -158,11 +158,7 @@ export function isIPv6(address) {
 }
 
 function _definition(address) {
-  for (const defintion of [ipv4, ipv6]) {
-    if (_is(defintion, address)) {
-      return defintion;
-    }
-  }
+  return [ipv4, ipv6].find(d => _is(d, address));
 }
 
 function _is(definition, address) {
