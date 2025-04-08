@@ -269,15 +269,16 @@ export function normalizeIP(address) {
 
 export function reverseArpa(address) {
   if (isIPv6(address)) {
-    const ea = encodeIPv6(address);
-    const result = [];
-    for (let i = 0; i < ea.length; i++) {
-      const v = ea[i];
-      for (let i = 0; i < 4; i++) {
-        result.push(((v >> (12 - 4 * i)) & 0x000f).toString(16));
-      }
-    }
-    return result.reverse().join(".") + ".ip6.arpa";
+    return (
+      encodeIPv6(address)
+        .reduce(
+          (a, segment) => (a += segment.toString(16).padStart(4, "0")),
+          ""
+        )
+        .split("")
+        .reverse()
+        .join(".") + ".ip6.arpa"
+    );
   }
 
   return address.split(".").reverse().join(".") + ".in-addr.arpa";
