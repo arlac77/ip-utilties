@@ -1,4 +1,5 @@
 const ipv4 = {
+  name: "IPv4",
   factory: Uint8Array,
   normalize(address) {
     return address;
@@ -12,6 +13,7 @@ const ipv4 = {
 };
 
 const ipv6 = {
+  name: "IPv6",
   factory: Uint16Array,
   normalize(address) {
     const parts = address.split(":");
@@ -138,6 +140,15 @@ export function isIPv4(address) {
 
 export function isIPv6(address) {
   return _is(ipv6, address);
+}
+
+/**
+ * IP address family for a given address.
+ * @param {string|Uint8Array|Uint16Array} address
+ * @return {string|undefined}
+ */
+export function familyIP(address) {
+  return _family(address)?.name
 }
 
 function _family(address) {

@@ -16,6 +16,7 @@ import {
   prefixIP,
   normalizeCIDR,
   formatCIDR,
+  familyIP,
   rangeIP,
   reverseArpa,
   IPV4_LOCALHOST,
@@ -356,8 +357,23 @@ test(rangeIPT, "fe80::", 96, 0, 0, "fe80::", "fe80::ffff:ffff");
 function formatCIDRT(t, address, prefixLength, expected) {
   t.is(formatCIDR(address, prefixLength), expected);
 }
-formatCIDRT.title = (providedTitle = "formatCIDR", address, cidr) =>
-  `${providedTitle} ${address} => ${cidr}`.trim();
+formatCIDRT.title = (
+  providedTitle = "formatCIDR",
+  address,
+  prefixLength,
+  cidr
+) => `${providedTitle} ${address}/${prefixLength} => ${cidr}`.trim();
 
 test(formatCIDRT, "192.168.1.62", 30, "192.168.1.62/30");
 test(formatCIDRT, encodeIP("192.168.1.62"), 30, "192.168.1.62/30");
+
+function familyIPT(t, address, expected) {
+  t.is(familyIP(address), expected);
+}
+familyIPT.title = (providedTitle = "familyIP", address, cidr) =>
+  `${providedTitle} ${address} => ${cidr}`.trim();
+
+test(familyIPT, "1.2.3.4", "IPv4");
+test(familyIPT, "::1", "IPv6");
+test(familyIPT, "", undefined);
+test(familyIPT, "some name", undefined);
