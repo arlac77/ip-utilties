@@ -31,7 +31,7 @@ const ipv6 = {
 };
 
 export function encodeIP(address) {
-  const d = _definition(address);
+  const d = _family(address);
   return d && _encode(d, address);
 }
 
@@ -43,43 +43,43 @@ export function encodeIPv4(address) {
   return _encode(ipv4, address);
 }
 
-function _encode(definition, address) {
+function _encode(family, address) {
   switch (typeof address) {
     case "string":
-      const res = new definition.factory(definition.segments);
+      const res = new family.factory(family.segments);
 
       let i = 0;
-      for (const segment of definition
+      for (const segment of family
         .normalize(address)
-        .split(definition.separator)) {
-        res[i++] = parseInt(segment, definition.base);
+        .split(family.separator)) {
+        res[i++] = parseInt(segment, family.base);
       }
 
       return res;
 
     case "bigint":
-      return _encodeBigInt(definition, address);
+      return _encodeBigInt(family, address);
 
     case "object":
       if (
-        address instanceof definition.factory &&
-        address.length === definition.segments
+        address instanceof family.factory &&
+        address.length === family.segments
       ) {
         return address;
       }
   }
 }
 
-function _decode(definition, address, length) {
+function _decode(family, address, length) {
   switch (typeof address) {
     case "string":
       if (length === undefined) {
         return address;
       }
-      address = _encode(definition, address);
+      address = _encode(family, address);
       break;
     case "bigint":
-      address = _encodeBigInt(definition, address);
+      address = _encodeBigInt(family, address);
   }
 
   let result = "";
@@ -88,7 +88,7 @@ function _decode(definition, address, length) {
   let last = address?.length;
 
   if (length !== undefined) {
-    length /= definition.segmentLength;
+    length /= family.segmentLength;
 
     if (length < last) {
       last = length;
@@ -98,22 +98,22 @@ function _decode(definition, address, length) {
     for (; j < last; j++) {
       word = address[j];
 
-      if (word !== 0 || !definition.compressor || compressed > 0) {
+      if (word !== 0 || !family.compressor || compressed > 0) {
         break;
       }
     }
 
     if (j > i + 1) {
       compressed++;
-      result += definition.compressor;
+      result += family.compressor;
     } else {
       if (result.length > 0) {
-        result += definition.separator;
+        result += family.separator;
       }
     }
 
     if (j < last) {
-      result += word.toString(definition.base);
+      result += word.toString(family.base);
     }
   }
 
@@ -140,19 +140,19 @@ export function isIPv6(address) {
   return _is(ipv6, address);
 }
 
-function _definition(address) {
+function _family(address) {
   return [ipv4, ipv6].find(d => _is(d, address));
 }
 
-function _is(definition, address) {
+function _is(family, address) {
   switch (typeof address) {
     case "string":
-      return address.indexOf(definition.separator) >= 0;
+      return address.indexOf(family.separator) >= 0;
 
     case "object":
       return (
-        address instanceof definition.factory &&
-        address.length === definition.segments
+        address instanceof family.factory &&
+        address.length === family.segments
       );
   }
 
@@ -160,50 +160,50 @@ function _is(definition, address) {
 }
 
 export function asBigInt(address) {
-  return _asBigInt(_definition(address), address);
+  return _asBigInt(_family(address), address);
 }
 
-function _asBigInt(definition, address) {
+function _asBigInt(family, address) {
   if (typeof address === "bigint") {
     return address;
   }
 
-  return _encode(definition, address).reduce(
-    (a, c) => (a << BigInt(definition.segmentLength)) + BigInt(c),
+  return _encode(family, address).reduce(
+    (a, c) => (a << BigInt(family.segmentLength)) + BigInt(c),
     0n
   );
 }
 
-function _encodeBigInt(definition, address) {
+function _encodeBigInt(family, address) {
   const segments = [];
 
-  for (let i = 0; i < definition.segments; i++) {
-    segments.push(Number(address & definition.segmentMask));
-    address >>= BigInt(definition.segmentLength);
+  for (let i = 0; i < family.segments; i++) {
+    segments.push(Number(address & family.segmentMask));
+    address >>= BigInt(family.segmentLength);
   }
 
-  return new definition.factory(segments.reverse());
+  return new family.factory(segments.reverse());
 }
 
 export function prefixIP(address, length) {
-  const definition = _definition(address);
-  return _decode(definition, _prefix(definition, address, length));
+  const family = _family(address);
+  return _decode(family, _prefix(family, address, length));
 }
 
-function _prefix(definition, address, length) {
+function _prefix(family, address, length) {
   return (
-    _asBigInt(definition, address) &
-    (-1n << BigInt(definition.bitLength - length))
+    _asBigInt(family, address) &
+    (-1n << BigInt(family.bitLength - length))
   );
 }
 
 export function rangeIP(address, prefix, lowerAdd = 0, upperReduce = 0) {
-  const definition = _definition(address);
-  const from = _prefix(definition, address, prefix);
-  const to = from | ((1n << BigInt(definition.bitLength - prefix)) - 1n);
+  const family = _family(address);
+  const from = _prefix(family, address, prefix);
+  const to = from | ((1n << BigInt(family.bitLength - prefix)) - 1n);
   return [
-    _encode(definition, from + BigInt(lowerAdd)),
-    _encode(definition, to - BigInt(upperReduce))
+    _encode(family, from + BigInt(lowerAdd)),
+    _encode(family, to - BigInt(upperReduce))
   ];
 }
 
@@ -218,22 +218,22 @@ export function normalizeCIDR(address) {
   } else {
     prefixLength = parseInt(prefixLength);
 
-    const definition = isIPv6(prefix) ? ipv6 : ipv4;
+    const family = isIPv6(prefix) ? ipv6 : ipv4;
     let n;
 
     if (prefixLength) {
-      n = _prefix(definition, prefix, prefixLength);
+      n = _prefix(family, prefix, prefixLength);
     } else {
-      n = _encode(definition, prefix);
+      n = _encode(family, prefix);
 
       if (isLocalhost(n)) {
-        prefixLength = definition === ipv6 ? 128 : 8;
+        prefixLength = family === ipv6 ? 128 : 8;
       } else {
         return {};
       }
     }
-    prefix = _decode(definition, n, prefixLength);
-    longPrefix = _decode(definition, n);
+    prefix = _decode(family, n, prefixLength);
+    longPrefix = _decode(family, n);
   }
 
   return {
