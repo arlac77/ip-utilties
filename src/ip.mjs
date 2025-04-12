@@ -51,9 +51,7 @@ function _encode(family, address) {
       const res = new family.factory(family.segments);
 
       let i = 0;
-      for (const segment of family
-        .normalize(address)
-        .split(family.separator)) {
+      for (const segment of family.normalize(address).split(family.separator)) {
         res[i++] = parseInt(segment, family.base);
       }
 
@@ -148,7 +146,7 @@ export function isIPv6(address) {
  * @return {string|undefined}
  */
 export function familyIP(address) {
-  return _family(address)?.name
+  return _family(address)?.name;
 }
 
 function _family(address) {
@@ -162,8 +160,7 @@ function _is(family, address) {
 
     case "object":
       return (
-        address instanceof family.factory &&
-        address.length === family.segments
+        address instanceof family.factory && address.length === family.segments
       );
   }
 
@@ -203,8 +200,7 @@ export function prefixIP(address, length) {
 
 function _prefix(family, address, length) {
   return (
-    _asBigInt(family, address) &
-    (-1n << BigInt(family.bitLength - length))
+    _asBigInt(family, address) & (-1n << BigInt(family.bitLength - length))
   );
 }
 
@@ -216,6 +212,11 @@ export function rangeIP(address, prefix, lowerAdd = 0, upperReduce = 0) {
     _encode(family, from + BigInt(lowerAdd)),
     _encode(family, to - BigInt(upperReduce))
   ];
+}
+
+export function matchPrefixIP(prefix, length, address) {
+  const family = _family(address);
+  return _prefix(family, address, length) === _prefix(family, prefix, length);
 }
 
 export function normalizeCIDR(address) {

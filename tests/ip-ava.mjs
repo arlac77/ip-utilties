@@ -19,6 +19,7 @@ import {
   familyIP,
   rangeIP,
   reverseArpa,
+  matchPrefixIP,
   IPV4_LOCALHOST,
   IPV6_LOCALHOST
 } from "../src/ip.mjs";
@@ -370,10 +371,24 @@ test(formatCIDRT, encodeIP("192.168.1.62"), 30, "192.168.1.62/30");
 function familyIPT(t, address, expected) {
   t.is(familyIP(address), expected);
 }
-familyIPT.title = (providedTitle = "familyIP", address, cidr) =>
-  `${providedTitle} ${address} => ${cidr}`.trim();
+familyIPT.title = (providedTitle = "familyIP", address, expected) =>
+  `${providedTitle} ${address} => ${expected}`.trim();
 
 test(familyIPT, "1.2.3.4", "IPv4");
 test(familyIPT, "::1", "IPv6");
 test(familyIPT, "", undefined);
 test(familyIPT, "some name", undefined);
+
+function matchPrefixIPT(t, prefix, length, address, expected) {
+  t.is(matchPrefixIP(prefix, length, address), expected);
+}
+matchPrefixIPT.title = (
+  providedTitle = "matchPrefix",
+  prefix,
+  length,
+  address,
+  expected
+) => `${providedTitle} ${prefix} ${length} ${address} => ${expected}`.trim();
+
+test(matchPrefixIPT, "192.168.1.0", 24, "192.168.1.62", true);
+test(matchPrefixIPT, "192.168.2.0", 24, "192.168.1.62", false);
