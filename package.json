@@ -12,12 +12,12 @@
   },
   "description": "ip v4/v6 utility functions",
   "keywords": [
+    "cidr",
     "ip",
     "ipv4",
     "ipv6",
     "network",
-    "subnet",
-    "cidr"
+    "subnet"
   ],
   "contributors": [
     {
