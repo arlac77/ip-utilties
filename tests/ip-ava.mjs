@@ -383,7 +383,7 @@ function matchPrefixIPT(t, prefix, length, address, expected) {
   t.is(matchPrefixIP(prefix, length, address), expected);
 }
 matchPrefixIPT.title = (
-  providedTitle = "matchPrefix",
+  providedTitle = "matchPrefixIP",
   prefix,
   length,
   address,
@@ -392,3 +392,4 @@ matchPrefixIPT.title = (
 
 test(matchPrefixIPT, "192.168.1.0", 24, "192.168.1.62", true);
 test(matchPrefixIPT, "192.168.2.0", 24, "192.168.1.62", false);
+test(matchPrefixIPT, "fe80::", 64, "fe80::c696:7f50:8c5:de0a", true);
