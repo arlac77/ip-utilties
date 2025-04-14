@@ -223,14 +223,14 @@ export function normalizeCIDR(address) {
   let [prefix, prefixLength] = address.split(/\//);
   let longPrefix;
 
-  if (!prefixLength && isLinkLocal(address)) {
+  prefixLength = prefixLength === undefined ? 0 : parseInt(prefixLength);
+
+  if (isLinkLocal(address)) {
     prefix = "fe80::";
     longPrefix = prefix;
     prefixLength = 64;
   } else {
-    prefixLength = parseInt(prefixLength);
-
-    const family = isIPv6(prefix) ? ipv6 : ipv4;
+    const family = /*_family(prefix); */ isIPv6(prefix) ? ipv6 : ipv4;
     let n;
 
     if (prefixLength) {
@@ -240,8 +240,6 @@ export function normalizeCIDR(address) {
 
       if (isLocalhost(n)) {
         prefixLength = family === ipv6 ? 128 : 8;
-      } else {
-        return {};
       }
     }
     prefix = _decode(family, n, prefixLength);

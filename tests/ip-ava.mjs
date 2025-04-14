@@ -324,13 +324,15 @@ normalizeCIDRT.title = (providedTitle = "normalizeCIDR", address, cidr) =>
 test(normalizeCIDRT, "127/8", "127/8");
 test(normalizeCIDRT, "127.0.0.1", "127/8");
 test(normalizeCIDRT, "::1", "::1/128");
-test(normalizeCIDRT, "1.2.3.4", undefined);
 test(normalizeCIDRT, "1.2.3.4/24", "1.2.3/24");
 test(normalizeCIDRT, "1.2.3.4/16", "1.2/16");
 test(normalizeCIDRT, "10.0/16", "10.0/16");
 test(normalizeCIDRT, "1.2.3.4/8", "1/8");
 test(normalizeCIDRT, "192.168.1.62/30", "192.168.1.60/30");
 test(normalizeCIDRT, "fe80::/64", "fe80::/64");
+test(normalizeCIDRT, "::/0", "/0");
+test(normalizeCIDRT, "0.0.0.0/0", "/0");
+test(normalizeCIDRT, "1.2.3.4", "/0");
 
 function rangeIPT(t, address, prefix, l, u, expectedFrom, expectedTo) {
   const [from, to] = rangeIP(address, prefix, l, u);
