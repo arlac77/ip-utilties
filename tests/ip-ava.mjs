@@ -297,6 +297,7 @@ test("wellKnownSubnet", t => {
   t.true(hasWellKnownSubnet("::1"));
   t.true(hasWellKnownSubnet("127.0.0.1"));
   t.true(hasWellKnownSubnet("fe80::1e57:3eff:fe22:9a8f"));
+  t.true(hasWellKnownSubnet("fd00::1"));
   t.false(hasWellKnownSubnet("1.2.3.4"));
 });
 
@@ -351,6 +352,7 @@ test(normalizeCIDRT, "10.0/16", "10.0/16");
 test(normalizeCIDRT, "1.2.3.4/8", "1/8");
 test(normalizeCIDRT, "192.168.1.62/30", "192.168.1.60/30");
 test(normalizeCIDRT, "fe80::/64", "fe80::/64");
+test(normalizeCIDRT, "fd00::", "fd00::/7");
 test(normalizeCIDRT, "::/0", "/0");
 test(normalizeCIDRT, "0.0.0.0/0", "/0");
 test(normalizeCIDRT, "1.2.3.4", "/0");

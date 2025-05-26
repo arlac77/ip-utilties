@@ -229,6 +229,10 @@ export function normalizeCIDR(address) {
     prefix = "fe80::";
     longPrefix = prefix;
     prefixLength = 64;
+  } else if (isUniqueLocal(address)) {
+    prefix = "fd00::";
+    longPrefix = prefix;
+    prefixLength = 7;
   } else {
     const family = /*_family(prefix); */ isIPv6(prefix) ? ipv6 : ipv4;
     let n;
@@ -302,7 +306,7 @@ export function isUniqueLocal(address) {
 }
 
 export function hasWellKnownSubnet(address) {
-  return isLocalhost(address) || isLinkLocal(address);
+  return isLocalhost(address) || isLinkLocal(address) || isUniqueLocal(address);
 }
 
 export const IPV6_LINK_LOCAL_BROADCAST = _encode(ipv6, "ff02::1");
