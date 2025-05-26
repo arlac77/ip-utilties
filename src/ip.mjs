@@ -232,7 +232,7 @@ export function normalizeCIDR(address) {
   } else if (isUniqueLocal(address)) {
     prefix = "fd00::";
     longPrefix = prefix;
-    prefixLength = 7;
+    prefixLength = 64;
   } else {
     const family = /*_family(prefix); */ isIPv6(prefix) ? ipv6 : ipv4;
     let n;
