@@ -296,6 +296,11 @@ export function isLinkLocal(address) {
   return eaddr?.[0] === 0xfe80;
 }
 
+export function isUniqueLocal(address) {
+  const eaddr = encodeIP(address);
+  return eaddr?.[0] === 0xfc00 || eaddr?.[0] === 0xfd00;
+}
+
 export function hasWellKnownSubnet(address) {
   return isLocalhost(address) || isLinkLocal(address);
 }

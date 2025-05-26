@@ -3,6 +3,7 @@ import {
   hasWellKnownSubnet,
   isLocalhost,
   isLinkLocal,
+  isUniqueLocal,
   isIPv4,
   isIPv6,
   encodeIP,
@@ -118,6 +119,26 @@ test(isLinkLocalT, true, false);
 test(isLinkLocalT, undefined, false);
 test(isLinkLocalT, null, false);
 test(isLinkLocalT, {}, false);
+
+function isUniqueLocalT(t, address, expected) {
+  t.is(isUniqueLocal(address), expected);
+}
+isUniqueLocalT.title = (providedTitle = "isUniqueLocal", address, expected) =>
+  `${providedTitle} ${address} => ${expected}`.trim();
+
+test(isUniqueLocalT, "1.2.3.4", false);
+test(isUniqueLocalT, "fe80::1e57:3eff:fe22:9a8f/64", false);
+test(isUniqueLocalT, "fc00::1", true);
+
+test(isUniqueLocalT, "", false);
+test(isUniqueLocalT, 2, false);
+test(isUniqueLocalT, 3.14, false);
+test(isUniqueLocalT, 4n, false);
+test(isUniqueLocalT, false, false);
+test(isUniqueLocalT, true, false);
+test(isUniqueLocalT, undefined, false);
+test(isUniqueLocalT, null, false);
+test(isUniqueLocalT, {}, false);
 
 function encodeIPT(t, address, expected) {
   t.deepEqual(encodeIP(address), expected);
