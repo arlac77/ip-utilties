@@ -343,9 +343,13 @@ test(prefixIPT, "2001:db8::1:0:0:1", 64, "2001:db8::");
 test(prefixIPT, "2001:db8::1:0:0:1", 92, "2001:db8::1:0:0:0");
 test(prefixIPT, "2001:db8::1:0:0:1", 128, "2001:db8::1:0:0:1");
 
-function normalizeCIDRT(t, address, expected) {
-  const { cidr } = normalizeCIDR(address);
-  t.is(cidr, expected);
+function normalizeCIDRT(t, address, expected, expectedLongPrefix) {
+  const { cidr, longPrefix } = normalizeCIDR(address);
+  t.is(cidr, expected, "CIDR");
+
+  if (expectedLongPrefix) {
+    t.is(longPrefix, expectedLongPrefix, "longPrefix");
+  }
 }
 normalizeCIDRT.title = (providedTitle = "normalizeCIDR", address, cidr) =>
   `${providedTitle} ${address} => ${cidr}`.trim();
@@ -358,9 +362,9 @@ test(normalizeCIDRT, "1.2.3.4/16", "1.2/16");
 test(normalizeCIDRT, "10.0/16", "10.0/16");
 test(normalizeCIDRT, "1.2.3.4/8", "1/8");
 test(normalizeCIDRT, "192.168.1.62/30", "192.168.1.60/30");
-test(normalizeCIDRT, "fe80::/64", "fe80::/64");
-test(normalizeCIDRT, "fd00::", "fd00::/64");
-test(normalizeCIDRT, "fd00:1:1:1::", "fd00:1:1:1/64");
+test(normalizeCIDRT, "fe80::/64", "fe80::/64", "fe80::");
+test(normalizeCIDRT, "fd00::", "fd00::/64", "fd00::");
+test(normalizeCIDRT, "fd00:1:1:1::", "fd00:1:1:1/64", "fd00:1:1:1::");
 test(normalizeCIDRT, "::/0", "/0");
 test(normalizeCIDRT, "0.0.0.0/0", "/0");
 test(normalizeCIDRT, "1.2.3.4", "/0");

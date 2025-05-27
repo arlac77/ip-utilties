@@ -230,13 +230,13 @@ export function normalizeCIDR(address) {
     longPrefix = prefix;
     prefixLength = 64;
   } else if (isUniqueLocal(address)) {
-    //prefix = "fd00::";
     prefixLength = 64;
-
-    let n = _prefix(ipv6, address, prefixLength);
+    const n = _prefix(ipv6, address, prefixLength);
     prefix = _decode(ipv6, n, prefixLength);
-
     longPrefix = prefix;
+    if(!prefix.endsWith('::')) { // TODO
+      longPrefix += '::';
+    }
   } else {
     const family = /*_family(prefix); */ isIPv6(prefix) ? ipv6 : ipv4;
     let n;
