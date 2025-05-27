@@ -233,10 +233,10 @@ export function normalizeCIDR(address) {
     prefixLength = 64;
     const n = _prefix(ipv6, address, prefixLength);
     prefix = _decode(ipv6, n, prefixLength);
-    longPrefix = prefix;
     if(!prefix.endsWith('::')) { // TODO
-      longPrefix += '::';
+      prefix += '::';
     }
+    longPrefix = prefix;
   } else {
     const family = /*_family(prefix); */ isIPv6(prefix) ? ipv6 : ipv4;
     let n;
