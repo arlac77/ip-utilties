@@ -223,21 +223,18 @@ export function normalizeCIDR(address) {
   let [prefix, prefixLength] = address.split(/\//);
   let longPrefix;
 
-  prefixLength = prefixLength === undefined ? 0 : parseInt(prefixLength);
-
-  if (isLinkLocal(address)) {
-    prefix = "fe80::";
-    longPrefix = prefix;
-    prefixLength = 64;
-  } else if (isUniqueLocal(address)) {
+  if (isUniqueLocal(address) || isLinkLocal(address)) {
     prefixLength = 64;
     const n = _prefix(ipv6, address, prefixLength);
     prefix = _decode(ipv6, n, prefixLength);
-    if(!prefix.endsWith('::')) { // TODO
-      prefix += '::';
+    if (!prefix.endsWith("::")) {
+      // TODO
+      prefix += "::";
     }
     longPrefix = prefix;
   } else {
+    prefixLength = prefixLength === undefined ? 0 : parseInt(prefixLength);
+
     const family = /*_family(prefix); */ isIPv6(prefix) ? ipv6 : ipv4;
     let n;
 
