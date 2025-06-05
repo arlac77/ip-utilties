@@ -275,6 +275,14 @@ function reverseArpaT(t, address, expected) {
 reverseArpaT.title = (providedTitle = "reverseArpa", address, expected) =>
   `${providedTitle} ${address} => ${expected}`.trim();
 
+
+test(
+  reverseArpaT,
+  "2001:8d8:100f:f000::2e3",
+  "3.e.2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.0.0.1.8.d.8.0.1.0.0.2.ip6.arpa"
+);
+
+
 test(
   reverseArpaT,
   "fe80::",
