@@ -277,6 +277,12 @@ export function reverseArpa(address) {
         )
         .split("")
         .reverse()
+        .reduce((all, s) => {
+          if (all.length > 0 || s !== "0") {
+            all.push(s);
+          }
+          return all;
+        }, [])
         .join(".") + ".ip6.arpa"
     );
   }
