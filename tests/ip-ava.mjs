@@ -129,6 +129,7 @@ isUniqueLocalT.title = (providedTitle = "isUniqueLocal", address, expected) =>
 test(isUniqueLocalT, "1.2.3.4", false);
 test(isUniqueLocalT, "fe80::1e57:3eff:fe22:9a8f/64", false);
 test(isUniqueLocalT, "fc00::1", true);
+test(isUniqueLocalT, "fd00::1", true);
 
 test(isUniqueLocalT, "", false);
 test(isUniqueLocalT, 2, false);
@@ -437,3 +438,5 @@ matchPrefixIPT.title = (
 test(matchPrefixIPT, "192.168.1.0", 24, "192.168.1.62", true);
 test(matchPrefixIPT, "192.168.2.0", 24, "192.168.1.62", false);
 test(matchPrefixIPT, "fe80::", 64, "fe80::c696:7f50:8c5:de0a", true);
+test(matchPrefixIPT, "fc00::",  7, "fc00::1:2:3:4", true);
+test(matchPrefixIPT, "fc00::",  7, "fd00::1:2:3:4", true);

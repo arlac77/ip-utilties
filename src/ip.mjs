@@ -309,7 +309,7 @@ export function isLinkLocal(address) {
 
 export function isUniqueLocal(address) {
   const eaddr = encodeIP(address);
-  return eaddr?.[0] === 0xfc00 || eaddr?.[0] === 0xfd00;
+  return eaddr?.[0] >> 9 === 126 ? true : false;
 }
 
 export function hasWellKnownSubnet(address) {
