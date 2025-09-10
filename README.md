@@ -12,12 +12,16 @@
 
 ip v4/v6 utility functions
 
-## 3 different representations
+## Three different representations
 
 ```javascript
 const ip4AsString = "10.0.0.1";
 const ip4AsArray = new Uint8Array([10,0,0,1]);
 const ip4or6AsBigInt = 10n << 14n | 1n;
+
+
+
+encodeIPv4("10.0.0.1") // -> 10n << 14n | 1n;
 ```
 
 # API
