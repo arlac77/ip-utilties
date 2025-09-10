@@ -229,7 +229,7 @@ export function normalizeCIDR(address) {
     prefix = _decode(ipv6, n, prefixLength);
     if (!prefix.endsWith("::")) {
       // TODO
-      prefix += "::";
+      prefix += prefix.endsWith(":") ? ":" : "::";
     }
     longPrefix = prefix;
   } else {

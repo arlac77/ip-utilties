@@ -372,6 +372,7 @@ test(normalizeCIDRT, "1.2.3.4/8", "1/8");
 test(normalizeCIDRT, "192.168.1.62/30", "192.168.1.60/30");
 test(normalizeCIDRT, "fe80::/64", "fe80::/64", "fe80::");
 test(normalizeCIDRT, "fd00::", "fd00::/64", "fd00::");
+test(normalizeCIDRT, "fd9a:df8a:86ce:0:1:2:3", "fd9a:df8a:86ce::/64");
 test(normalizeCIDRT, "fd00:1:1:1::", "fd00:1:1:1::/64", "fd00:1:1:1::");
 test(normalizeCIDRT, "::/0", "/0");
 test(normalizeCIDRT, "0.0.0.0/0", "/0");
