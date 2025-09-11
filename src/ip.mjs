@@ -32,15 +32,30 @@ const ipv6 = {
   base: 16
 };
 
+/**
+ * Encode ipv4 or ipv6 address into number array.
+ * @param {string|number[]} address 
+ * @returns number[]
+ */
 export function encodeIP(address) {
   const d = _family(address);
   return d && _encode(d, address);
 }
 
+/**
+ * Encode ipv6 address into number array.
+ * @param {string|number[]|bigint} address 
+ * @returns number[]
+ */
 export function encodeIPv6(address) {
   return _encode(ipv6, address);
 }
 
+/**
+ * Encode ipv6 address into number array.
+ * @param {string|number[]|bigint} address 
+ * @returns number[]
+ */
 export function encodeIPv4(address) {
   return _encode(ipv4, address);
 }
