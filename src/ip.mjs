@@ -331,7 +331,8 @@ export function hasWellKnownSubnet(address) {
   return isLocalhost(address) || isLinkLocal(address) || isUniqueLocal(address);
 }
 
-export const IPV6_LINK_LOCAL_BROADCAST = _encode(ipv6, "ff02::1");
-export const IPV6_ROUTER_BROADCAST = _encode(ipv6, "ff02::2");
+export const IPV6_ALL_NODES   = _encode(ipv6, "ff02::1");
+export const IPV6_ALL_ROUTERS = _encode(ipv6, "ff02::2");
+export const IPV6_ALL_HOSTS   = _encode(ipv6, "ff02::3");
 export const IPV4_LOCALHOST = _encode(ipv4, "127.0.0.1");
 export const IPV6_LOCALHOST = _encode(ipv6, "::1");
