@@ -422,6 +422,8 @@ familyIPT.title = (providedTitle = "familyIP", address, expected) =>
 
 test(familyIPT, "1.2.3.4", "IPv4");
 test(familyIPT, "::1", "IPv6");
+test(familyIPT, "16", undefined);
+test(familyIPT, 17, undefined);
 test(familyIPT, "", undefined);
 test(familyIPT, "some name", undefined);
 
