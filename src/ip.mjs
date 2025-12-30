@@ -231,7 +231,7 @@ export function rangeIP(address, prefix, lowerAdd = 0, upperReduce = 0) {
 
 export function matchPrefixIP(prefix, length, address) {
   const family = _family(address);
-  return _prefix(family, address, length) === _prefix(family, prefix, length);
+  return family !== undefined && _prefix(family, address, length) === _prefix(family, prefix, length);
 }
 
 export function normalizeCIDR(address) {

@@ -440,6 +440,8 @@ matchPrefixIPT.title = (
 
 test(matchPrefixIPT, "192.168.1.0", 24, "192.168.1.62", true);
 test(matchPrefixIPT, "192.168.2.0", 24, "192.168.1.62", false);
+test(matchPrefixIPT, "10.0/16", 16, "", false);
 test(matchPrefixIPT, "fe80::", 64, "fe80::c696:7f50:8c5:de0a", true);
 test(matchPrefixIPT, "fc00::",  7, "fc00::1:2:3:4", true);
 test(matchPrefixIPT, "fc00::",  7, "fd00::1:2:3:4", true);
+test(matchPrefixIPT, "fc00::",  7, "f", false);
