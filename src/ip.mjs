@@ -98,7 +98,7 @@ function _decode(family, address, length) {
   }
 
   let result = "";
-  let compressed = 0;
+  let compressed = false;
   let word;
   let last = address?.length;
 
@@ -113,13 +113,13 @@ function _decode(family, address, length) {
     for (; j < last; j++) {
       word = address[j];
 
-      if (word !== 0 || !family.compressor || compressed > 0) {
+      if (word !== 0 || !family.compressor || compressed) {
         break;
       }
     }
 
     if (j > i + 1) {
-      compressed++;
+      compressed = true;
       result += family.compressor;
     } else {
       if (result.length > 0) {
@@ -331,8 +331,15 @@ export function hasWellKnownSubnet(address) {
   return isLocalhost(address) || isLinkLocal(address) || isUniqueLocal(address);
 }
 
-export const IPV6_ALL_NODES   = _encode(ipv6, "ff02::1");
-export const IPV6_ALL_ROUTERS = _encode(ipv6, "ff02::2");
-export const IPV6_ALL_HOSTS   = _encode(ipv6, "ff02::3");
+/*
+ * https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml
+ */
+export const IPV6_NODE_LOCAL_ALL_NODES        = _encode(ipv6, "ff01::1");
+export const IPV6_NODE_LOCAL_ALL_ROUTERS      = _encode(ipv6, "ff01::2");
+export const IPV6_LINK_LOCAL_ALL_NODES        = _encode(ipv6, "ff02::1");
+export const IPV6_LINK_LOCAL_ALL_ROUTERS      = _encode(ipv6, "ff02::2");
+export const IPV6_SITE_LOCAL_ALL_ROUTERS      = _encode(ipv6, "ff05::2");
+export const IPV6_SITE_LOCAL_ALL_DHCP_SERVERS = _encode(ipv6, "ff05::1:3");
+
 export const IPV4_LOCALHOST = _encode(ipv4, "127.0.0.1");
 export const IPV6_LOCALHOST = _encode(ipv6, "::1");
