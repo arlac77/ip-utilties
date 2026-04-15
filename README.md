@@ -9,18 +9,17 @@
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![Known Vulnerabilities](https://snyk.io/test/github/arlac77/ip-utilties/badge.svg)](https://snyk.io/test/github/arlac77/ip-utilties)
 
-ip v4/v6 utility functions
+ip-v4/v6 utility functions
 
 ## Three different representations
 
 ```javascript
 const ip4AsString = "10.0.0.1";
 const ip4AsArray = new Uint8Array([10,0,0,1]);
-const ip4or6AsBigInt = 10n << 14n | 1n;
+const ip4or6AsBigInt = 10n << 24n | 1n;
 
 
-
-encodeIPv4("10.0.0.1") // -> 10n << 14n | 1n;
+encodeIPv4("10.0.0.1") // -> 10n << 24n | 1n;
 ```
 
 # API
