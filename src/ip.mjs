@@ -1,9 +1,7 @@
 const ipv4 = {
   name: "IPv4",
   factory: Uint8Array,
-  normalize(address) {
-    return address;
-  },
+  normalize: (address) => address,
   separator: ".",
   bitLength: 32,
   segments: 4,
