@@ -1,7 +1,17 @@
+/**
+ * Address familiy IPv4
+ */
+export const FAMILY_IPV4 = "IPv4";
+
+/**
+ * Address familiy IPv6
+ */
+export const FAMILY_IPV6 = "IPv6";
+
 const ipv4 = {
-  name: "IPv4",
+  name: FAMILY_IPV4,
   factory: Uint8Array,
-  normalize: (address) => address,
+  normalize: address => address,
   separator: ".",
   bitLength: 32,
   segments: 4,
@@ -11,7 +21,7 @@ const ipv4 = {
 };
 
 const ipv6 = {
-  name: "IPv6",
+  name: FAMILY_IPV6,
   factory: Uint16Array,
   normalize(address) {
     const parts = address.split(":");
@@ -32,7 +42,7 @@ const ipv6 = {
 
 /**
  * Encode ipv4 or ipv6 address into number array.
- * @param {string|number[]} address 
+ * @param {string|number[]} address
  * @returns number[]
  */
 export function encodeIP(address) {
@@ -42,7 +52,7 @@ export function encodeIP(address) {
 
 /**
  * Encode ipv6 address into number array.
- * @param {string|number[]|bigint} address 
+ * @param {string|number[]|bigint} address
  * @returns number[]
  */
 export function encodeIPv6(address) {
@@ -51,7 +61,7 @@ export function encodeIPv6(address) {
 
 /**
  * Encode ipv6 address into number array.
- * @param {string|number[]|bigint} address 
+ * @param {string|number[]|bigint} address
  * @returns number[]
  */
 export function encodeIPv4(address) {
@@ -229,7 +239,10 @@ export function rangeIP(address, prefix, lowerAdd = 0, upperReduce = 0) {
 
 export function matchPrefixIP(prefix, length, address) {
   const family = _family(address);
-  return family !== undefined && _prefix(family, address, length) === _prefix(family, prefix, length);
+  return (
+    family !== undefined &&
+    _prefix(family, address, length) === _prefix(family, prefix, length)
+  );
 }
 
 export function normalizeCIDR(address) {
@@ -332,11 +345,11 @@ export function hasWellKnownSubnet(address) {
 /*
  * https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml
  */
-export const IPV6_NODE_LOCAL_ALL_NODES        = _encode(ipv6, "ff01::1");
-export const IPV6_NODE_LOCAL_ALL_ROUTERS      = _encode(ipv6, "ff01::2");
-export const IPV6_LINK_LOCAL_ALL_NODES        = _encode(ipv6, "ff02::1");
-export const IPV6_LINK_LOCAL_ALL_ROUTERS      = _encode(ipv6, "ff02::2");
-export const IPV6_SITE_LOCAL_ALL_ROUTERS      = _encode(ipv6, "ff05::2");
+export const IPV6_NODE_LOCAL_ALL_NODES = _encode(ipv6, "ff01::1");
+export const IPV6_NODE_LOCAL_ALL_ROUTERS = _encode(ipv6, "ff01::2");
+export const IPV6_LINK_LOCAL_ALL_NODES = _encode(ipv6, "ff02::1");
+export const IPV6_LINK_LOCAL_ALL_ROUTERS = _encode(ipv6, "ff02::2");
+export const IPV6_SITE_LOCAL_ALL_ROUTERS = _encode(ipv6, "ff05::2");
 export const IPV6_SITE_LOCAL_ALL_DHCP_SERVERS = _encode(ipv6, "ff05::1:3");
 
 export const IPV4_LOCALHOST = _encode(ipv4, "127.0.0.1");
