@@ -30,6 +30,8 @@ encodeIPv4("10.0.0.1") // -> 10n << 14n | 1n;
 
 ### Table of Contents
 
+*   [FAMILY\_IPV4](#family_ipv4)
+*   [FAMILY\_IPV6](#family_ipv6)
 *   [encodeIP](#encodeip)
     *   [Parameters](#parameters)
 *   [encodeIPv6](#encodeipv6)
@@ -38,6 +40,18 @@ encodeIPv4("10.0.0.1") // -> 10n << 14n | 1n;
     *   [Parameters](#parameters-2)
 *   [familyIP](#familyip)
     *   [Parameters](#parameters-3)
+
+## FAMILY\_IPV4
+
+Address familiy IPv4
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## FAMILY\_IPV6
+
+Address familiy IPv6
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ## encodeIP
 
