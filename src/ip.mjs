@@ -290,7 +290,8 @@ export function formatCIDR(address, prefixLength) {
 }
 
 export function normalizeIP(address) {
-  return decodeIP(encodeIP(address));
+  const f = _family(address);
+  return f && _decode(f, _encode(f, address));
 }
 
 export function reverseArpa(address) {
