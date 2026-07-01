@@ -331,7 +331,11 @@ export function isLocalhost(address) {
 
 export function isLinkLocal(address) {
   const eaddr = encodeIP(address);
-  return eaddr?.[0] === 0xfe80;
+  if (eaddr) {
+    return eaddr[0] === 0xfe80 || (eaddr[0] === 169 && eaddr[1] === 254);
+  }
+
+  return false;
 }
 
 export function isUniqueLocal(address) {
@@ -342,6 +346,25 @@ export function isUniqueLocal(address) {
 export function hasWellKnownSubnet(address) {
   return isLocalhost(address) || isLinkLocal(address) || isUniqueLocal(address);
 }
+
+/*
+  prefix     global subnet interface
+
+  ff01:: ff02::   1
+  ff05::          2 3
+
+  https://en.wikipedia.org/wiki/Link-local_address
+  fe80::          64       link local
+  169.254. /16             link local
+
+  https://en.wikipedia.org/wiki/Unique_local_address
+  fc00::          64       unique local
+  fd00::          64       unique local
+
+  ::1             128.     local host
+  127             8        local host
+  172
+*/
 
 /*
  * https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml

@@ -102,6 +102,7 @@ isLinkLocalT.title = (providedTitle = "isLinkLocal", address, expected) =>
   `${providedTitle} ${address} => ${expected}`.trim();
 
 test(isLinkLocalT, "1.2.3.4", false);
+test(isLinkLocalT, "169.254.1.2", true);
 test(isLinkLocalT, "fe80:0000:0000:0000:1e57:3eff:fe22:9a8f/64", true);
 test(isLinkLocalT, "fe80:::1e57:3eff:fe22:9a8f/64", true);
 test(isLinkLocalT, "fe80:::1e57:3eff:fe22:9a8f", true);
