@@ -268,7 +268,9 @@ normalizeIP_T.title = (providedTitle = "normalizeIP", address, expected) =>
   `${providedTitle} ${address} => ${expected}`.trim();
 
 test(normalizeIP_T, "0000::a", "::a");
+test(normalizeIP_T, "fe80::1e57:3eff:fe22:9a8f/64", "fe80::1e57:3eff:fe22:9a8f");
 test(normalizeIP_T, "1.2.3.04", "1.2.3.4");
+test(normalizeIP_T, "192.168.1.1/24", "192.168.1.1");
 
 function reverseArpaT(t, address, expected) {
   t.is(reverseArpa(address), expected);
