@@ -17,7 +17,8 @@ const ipv4 = {
   segments: 4,
   segmentLength: 8,
   segmentMask: 0xffn,
-  base: 10
+  base: 10,
+  linkLocalPrefixLength: 16
 };
 
 const ipv6 = {
@@ -37,7 +38,8 @@ const ipv6 = {
   segments: 8,
   segmentLength: 16,
   segmentMask: 0xffffn,
-  base: 16
+  base: 16,
+  linkLocalPrefixLength: 64
 };
 
 /**
@@ -249,19 +251,23 @@ export function normalizeCIDR(address) {
   let [prefix, prefixLength] = address.split(/\//);
   let longPrefix;
 
+  const family = isIPv6(prefix) ? ipv6 : ipv4;
+
   if (isUniqueLocal(address) || isLinkLocal(address)) {
-    prefixLength = 64;
-    const n = _prefix(ipv6, address, prefixLength);
-    prefix = _decode(ipv6, n, prefixLength);
-    if (!prefix.endsWith("::")) {
-      // TODO
-      prefix += prefix.endsWith(":") ? ":" : "::";
+    prefixLength = family.linkLocalPrefixLength;
+    const n = _prefix(family, address, prefixLength);
+    prefix = _decode(family, n, prefixLength);
+
+    if (family == ipv6) {
+      if (!prefix.endsWith("::")) {
+        // TODO
+        prefix += prefix.endsWith(":") ? ":" : "::";
+      }
     }
     longPrefix = prefix;
   } else {
     prefixLength = prefixLength === undefined ? 0 : parseInt(prefixLength);
 
-    const family = /*_family(prefix); */ isIPv6(prefix) ? ipv6 : ipv4;
     let n;
 
     if (prefixLength) {
@@ -364,6 +370,7 @@ export function hasWellKnownSubnet(address) {
   ::1             128.     local host
   127             8        local host
   172
+
 */
 
 /*

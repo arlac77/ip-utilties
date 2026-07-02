@@ -380,6 +380,7 @@ test(normalizeCIDRT, "fd00:1:1:1::", "fd00:1:1:1::/64", "fd00:1:1:1::");
 test(normalizeCIDRT, "::/0", "/0");
 test(normalizeCIDRT, "0.0.0.0/0", "/0");
 test(normalizeCIDRT, "1.2.3.4", "/0");
+test(normalizeCIDRT, "169.254.1.2", "169.254/16");
 
 function rangeIPT(t, address, prefix, l, u, expectedFrom, expectedTo) {
   const [from, to] = rangeIP(address, prefix, l, u);
