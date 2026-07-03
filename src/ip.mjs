@@ -19,7 +19,8 @@ const ipv4 = {
   segmentMask: 0xffn,
   base: 10,
   linkLocalPrefix: new Uint8Array([169, 254]),
-  linkLocalPrefixLength: 16
+  linkLocalPrefixLength: 16,
+  localHostPrefixLenth: 8
 };
 
 const ipv6 = {
@@ -41,8 +42,11 @@ const ipv6 = {
   segmentMask: 0xffffn,
   base: 16,
   linkLocalPrefix: new Uint16Array([0xfe80]),
-  linkLocalPrefixLength: 64
+  linkLocalPrefixLength: 64,
+  localHostPrefixLenth: 128
 };
+
+const families = [ipv4, ipv6];
 
 /**
  * Encode ipv4 or ipv6 address into number array.
@@ -64,7 +68,7 @@ export function encodeIPv6(address) {
 }
 
 /**
- * Encode ipv6 address into number array.
+ * Encode ipv4 address into number array.
  * @param {string|number[]|bigint} address
  * @returns number[]
  */
@@ -177,7 +181,7 @@ export function familyIP(address) {
 }
 
 function _family(address) {
-  return [ipv4, ipv6].find(d => _is(d, address));
+  return families.find(d => _is(d, address));
 }
 
 function _is(family, address) {
@@ -278,7 +282,7 @@ export function normalizeCIDR(address) {
       n = _encode(family, prefix);
 
       if (isLocalhost(n)) {
-        prefixLength = family === ipv6 ? 128 : 8;
+        prefixLength = family.localHostPrefixLenth;
       }
     }
     prefix = _decode(family, n, prefixLength);
@@ -339,10 +343,10 @@ export function isLocalhost(address) {
 
 export function isLinkLocal(address) {
   const family = _family(address);
-  if (!family) {
-    return false;
+  if (family) {
+    return _isLinkLocal(family, address);
   }
-  return _isLinkLocal(family, address);
+  return false;
 }
 
 export function _isLinkLocal(family, address) {
