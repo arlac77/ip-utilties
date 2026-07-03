@@ -18,6 +18,7 @@ const ipv4 = {
   segmentLength: 8,
   segmentMask: 0xffn,
   base: 10,
+  linkLocalPrefix: new Uint8Array([169, 254]),
   linkLocalPrefixLength: 16
 };
 
@@ -39,6 +40,7 @@ const ipv6 = {
   segmentLength: 16,
   segmentMask: 0xffffn,
   base: 16,
+  linkLocalPrefix: new Uint16Array([0xfe80]),
   linkLocalPrefixLength: 64
 };
 
@@ -253,7 +255,7 @@ export function normalizeCIDR(address) {
 
   const family = isIPv6(prefix) ? ipv6 : ipv4;
 
-  if (isUniqueLocal(address) || isLinkLocal(address)) {
+  if (isUniqueLocal(address) || _isLinkLocal(family, address)) {
     prefixLength = family.linkLocalPrefixLength;
     const n = _prefix(family, address, prefixLength);
     prefix = _decode(family, n, prefixLength);
@@ -336,12 +338,22 @@ export function isLocalhost(address) {
 }
 
 export function isLinkLocal(address) {
-  const eaddr = encodeIP(address);
-  if (eaddr) {
-    return eaddr[0] === 0xfe80 || (eaddr[0] === 169 && eaddr[1] === 254);
+  const family = _family(address);
+  if (!family) {
+    return false;
   }
+  return _isLinkLocal(family, address);
+}
 
-  return false;
+export function _isLinkLocal(family, address) {
+  const eaddr = _encode(family, address);
+  let i = 0;
+  for (const slot of family.linkLocalPrefix) {
+    if (slot !== eaddr[i++]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 export function isUniqueLocal(address) {
