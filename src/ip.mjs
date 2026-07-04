@@ -266,7 +266,7 @@ export function normalizeCIDR(address) {
     const n = _prefix(family, address, prefixLength);
     prefix = _decode(family, n, prefixLength);
 
-    if (family == ipv6) {
+    if (family === ipv6) {
       if (!prefix.endsWith("::")) {
         // TODO
         prefix += prefix.endsWith(":") ? ":" : "::";
