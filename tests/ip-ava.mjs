@@ -1,5 +1,6 @@
 import test from "ava";
 import {
+  wellKnownSubnet,
   hasWellKnownSubnet,
   isLocalhost,
   isLinkLocal,
@@ -269,7 +270,11 @@ normalizeIP_T.title = (providedTitle = "normalizeIP", address, expected) =>
   `${providedTitle} ${address} => ${expected}`.trim();
 
 test(normalizeIP_T, "0000::a", "::a");
-test(normalizeIP_T, "fe80::1e57:3eff:fe22:9a8f/64", "fe80::1e57:3eff:fe22:9a8f");
+test(
+  normalizeIP_T,
+  "fe80::1e57:3eff:fe22:9a8f/64",
+  "fe80::1e57:3eff:fe22:9a8f"
+);
 test(normalizeIP_T, "1.2.3.04", "1.2.3.4");
 test(normalizeIP_T, "192.168.1.1/24", "192.168.1.1");
 
@@ -279,24 +284,15 @@ function reverseArpaT(t, address, expected) {
 reverseArpaT.title = (providedTitle = "reverseArpa", address, expected) =>
   `${providedTitle} ${address} => ${expected}`.trim();
 
-
 test(
   reverseArpaT,
   "2001:8d8:100f:f000::2e3",
   "3.e.2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.0.0.1.8.d.8.0.1.0.0.2.ip6.arpa"
 );
 
-test(
-  reverseArpaT,
-  "fe80::",
-  "8.e.f.ip6.arpa"
-);
+test(reverseArpaT, "fe80::", "8.e.f.ip6.arpa");
 
-test(
-  reverseArpaT,
-  "fd00:1:1:1::",
-  "1.0.0.0.1.0.0.0.1.0.0.0.0.0.d.f.ip6.arpa"
-);
+test(reverseArpaT, "fd00:1:1:1::", "1.0.0.0.1.0.0.0.1.0.0.0.0.0.d.f.ip6.arpa");
 
 test(
   reverseArpaT,
@@ -305,19 +301,34 @@ test(
 );
 test(reverseArpaT, "1.2.3.4", "4.3.2.1.in-addr.arpa");
 
+function wellKnownSubnetT(t, address, prefix, length) {
+  t.is(hasWellKnownSubnet(address), prefix !== undefined);
+
+  /*if (prefix) {
+    const [p, l] = wellKnownSubnet(address);
+    t.is(decodeIP(p), prefix);
+    t.is(l, length);
+  }*/
+}
+wellKnownSubnetT.title = (
+  providedTitle = "wellKnownSubnet",
+  address,
+  prefix,
+  length
+) => `${providedTitle} ${address} => ${prefix}/${length}`.trim();
+
+test(wellKnownSubnetT, "::1", "::1", 128);
+test(wellKnownSubnetT, "127.0.0.1", "127.0.0.1", 8);
+test(wellKnownSubnetT, "1.2.3.4");
+test(wellKnownSubnetT, "192.168.1.2", "92.168.1", 8);
+test(wellKnownSubnetT, "fe80::1e57:3eff:fe22:9a8f", "fe80", 64);
+test(wellKnownSubnetT, "fd00::1", "fd00", 64);
+
 function normalizeIPT(t, address, expected) {
   t.is(normalizeIP(address), expected);
 }
 normalizeIPT.title = (providedTitle = "normalizeIP", address, expected) =>
   `${providedTitle} ${address} => ${expected}`.trim();
-
-test("wellKnownSubnet", t => {
-  t.true(hasWellKnownSubnet("::1"));
-  t.true(hasWellKnownSubnet("127.0.0.1"));
-  t.true(hasWellKnownSubnet("fe80::1e57:3eff:fe22:9a8f"));
-  t.true(hasWellKnownSubnet("fd00::1"));
-  t.false(hasWellKnownSubnet("1.2.3.4"));
-});
 
 function asBigIntT(t, address, expected) {
   t.is(asBigInt(address), expected);
@@ -446,6 +457,6 @@ test(matchPrefixIPT, "192.168.1.0", 24, "192.168.1.62", true);
 test(matchPrefixIPT, "192.168.2.0", 24, "192.168.1.62", false);
 test(matchPrefixIPT, "10.0/16", 16, "", false);
 test(matchPrefixIPT, "fe80::", 64, "fe80::c696:7f50:8c5:de0a", true);
-test(matchPrefixIPT, "fc00::",  7, "fc00::1:2:3:4", true);
-test(matchPrefixIPT, "fc00::",  7, "fd00::1:2:3:4", true);
-test(matchPrefixIPT, "fc00::",  7, "f", false);
+test(matchPrefixIPT, "fc00::", 7, "fc00::1:2:3:4", true);
+test(matchPrefixIPT, "fc00::", 7, "fd00::1:2:3:4", true);
+test(matchPrefixIPT, "fc00::", 7, "f", false);
