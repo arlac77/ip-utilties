@@ -20,6 +20,7 @@ const ipv4 = {
   base: 10,
   linkLocalPrefix: new Uint8Array([169, 254]),
   linkLocalPrefixLength: 16,
+  localHost: new Uint8Array([127, 0, 0, 1]),
   localHostPrefixLenth: 8
 };
 
@@ -43,6 +44,7 @@ const ipv6 = {
   base: 16,
   linkLocalPrefix: new Uint16Array([0xfe80]),
   linkLocalPrefixLength: 64,
+  localHost: new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]),
   localHostPrefixLenth: 128
 };
 
@@ -329,16 +331,23 @@ export function reverseArpa(address) {
   return address.split(".").reverse().join(".") + ".in-addr.arpa";
 }
 
-export function isLocalhost(address) {
-  const eaddr = encodeIP(address);
+function _equal(a, b) {
+  let i = 0;
+  for (const slot of a) {
+    if (slot !== b[i++]) {
+      return false;
+    }
+  }
+  return true;
+}
 
-  if (!eaddr) {
-    return false;
+export function isLocalhost(address) {
+  const family = _family(address);
+  if (family) {
+    return _equal(family.localHost, _encode(family, address));
   }
 
-  const str = eaddr.toString();
-
-  return str === IPV4_LOCALHOST.toString() || str === IPV6_LOCALHOST.toString();
+  return false;
 }
 
 export function isLinkLocal(address) {
@@ -350,14 +359,7 @@ export function isLinkLocal(address) {
 }
 
 export function _isLinkLocal(family, address) {
-  const eaddr = _encode(family, address);
-  let i = 0;
-  for (const slot of family.linkLocalPrefix) {
-    if (slot !== eaddr[i++]) {
-      return false;
-    }
-  }
-  return true;
+  return _equal(family.linkLocalPrefix, _encode(family, address));
 }
 
 export function isUniqueLocal(address) {
@@ -386,7 +388,6 @@ export function hasWellKnownSubnet(address) {
   ::1             128.     local host
   127             8        local host
   172
-
 */
 
 /*
@@ -399,5 +400,5 @@ export const IPV6_LINK_LOCAL_ALL_ROUTERS = _encode(ipv6, "ff02::2");
 export const IPV6_SITE_LOCAL_ALL_ROUTERS = _encode(ipv6, "ff05::2");
 export const IPV6_SITE_LOCAL_ALL_DHCP_SERVERS = _encode(ipv6, "ff05::1:3");
 
-export const IPV4_LOCALHOST = _encode(ipv4, "127.0.0.1");
-export const IPV6_LOCALHOST = _encode(ipv6, "::1");
+export const IPV4_LOCALHOST = ipv4.localHost;
+export const IPV6_LOCALHOST = ipv6.localHost;
