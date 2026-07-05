@@ -22,7 +22,11 @@ const ipv4 = {
   linkLocalPrefixLength: 16,
   localHost: new Uint8Array([127, 0, 0, 1]),
   localHostPrefixLenth: 8,
-  wellKnownClasses: [[new Uint8Array([192, 168]), 8]]
+  wellKnownClasses: [
+    [new Uint8Array([10]), 8],
+    [new Uint8Array([172, 16]), 16],
+    [new Uint8Array([192, 168]), 24]
+  ]
 };
 
 const ipv6 = {
@@ -378,28 +382,30 @@ export function hasWellKnownSubnet(address) {
 export function wellKnownSubnet(address) {
   const family = _family(address);
   if (family) {
-    const encoded = _encode(family, address);
+    return _wellKnownSubnet(family, address);
+  }
+}
 
-    if (_equal(family.localHost, encoded)) {
-      return [family.localHost, family.localHostPrefixLenth];
-    }
-    if (_equal(family.linkLocalPrefix, encoded)) {
-      return [family.linkLocalPrefix, family.linkLocalPrefixLength];
-    }
-    if (_isUniqueLocal(encoded)) {
-      return [encoded[0], 64];
-    }
+export function _wellKnownSubnet(family, address) {
+  const encoded = _encode(family, address);
 
-    if (family === ipv4) {
-      for (const c of family.wellKnownClasses) {
-        if (_equal(c[0], encoded)) {
-          return c;
-        }
+  if (_equal(family.localHost, encoded)) {
+    return [family.localHost, family.localHostPrefixLenth];
+  }
+  if (_equal(family.linkLocalPrefix, encoded)) {
+    return [family.linkLocalPrefix, family.linkLocalPrefixLength];
+  }
+  if (_isUniqueLocal(encoded)) {
+    return [encoded[0], 64];
+  }
+
+  if (family === ipv4) {
+    for (const c of family.wellKnownClasses) {
+      if (_equal(c[0], encoded)) {
+        return c;
       }
     }
   }
-
-  return undefined;
 }
 
 /*
