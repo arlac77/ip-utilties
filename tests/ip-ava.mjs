@@ -302,7 +302,7 @@ test(
 test(reverseArpaT, "1.2.3.4", "4.3.2.1.in-addr.arpa");
 
 function wellKnownSubnetT(t, address, prefix, length) {
-  t.is(hasWellKnownSubnet(address), prefix !== undefined);
+  t.is(hasWellKnownSubnet(address), prefix !== undefined, address);
 
   /*if (prefix) {
     const [p, l] = wellKnownSubnet(address);
@@ -320,9 +320,10 @@ wellKnownSubnetT.title = (
 test(wellKnownSubnetT, "::1", "::1", 128);
 test(wellKnownSubnetT, "127.0.0.1", "127.0.0.1", 8);
 test(wellKnownSubnetT, "1.2.3.4");
-test(wellKnownSubnetT, "10.0.0.1", "10", 24);
+test(wellKnownSubnetT, "10.0.0.1", "10", 8);
 test(wellKnownSubnetT, "172.16.1.2", "172.16", 16);
 test(wellKnownSubnetT, "192.168.1.2", "92.168.1", 8);
+test(wellKnownSubnetT, "192.0.2.7", "192.0.2", 8);
 test(wellKnownSubnetT, "fe80::1e57:3eff:fe22:9a8f", "fe80", 64);
 test(wellKnownSubnetT, "fd00::1", "fd00", 64);
 

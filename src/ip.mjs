@@ -22,10 +22,22 @@ const ipv4 = {
   linkLocalPrefixLength: 16,
   localHost: new Uint8Array([127, 0, 0, 1]),
   localHostPrefixLenth: 8,
-  wellKnownClasses: [
-    [new Uint8Array([10]), 8],
-    [new Uint8Array([172, 16]), 16],
-    [new Uint8Array([192, 168]), 24]
+
+  // https://www.geeksforgeeks.org/computer-networks/subnet-cheat-sheet/
+  wellKnownAddresses: [
+    [new Uint8Array([0, 0, 0, 0]), 8], // This network
+    [new Uint8Array([10, 0, 0, 0]), 8], // Private Address Block
+    [new Uint8Array([100, 64, 0, 0]), 10], // Carrier-grade NAT
+    [new Uint8Array([127, 0, 0, 0]), 8], // Loopback
+    [new Uint8Array([127, 0, 53, 53]), 0], // Name collision occurrence
+    [new Uint8Array([169, 254, 0, 0]), 16], // Link local
+    [new Uint8Array([172, 16, 0, 0]), 12], // Private Address Block
+    [new Uint8Array([192, 0, 0, 0]), 24], // IETF protocol assignments
+    [new Uint8Array([192, 0, 2, 0]), 24], // TEST-NET-1
+    [new Uint8Array([192, 168, 0, 0]), 16], // Private Address Block
+    [new Uint8Array([198, 18, 0, 0]), 15], // Network benchmark testing
+    [new Uint8Array([198, 51, 100, 0]), 24], // TEST-NET-2
+    [new Uint8Array([255, 255, 255, 255]), 0] // Limited Broadcast address
   ]
 };
 
@@ -400,8 +412,20 @@ export function _wellKnownSubnet(family, address) {
   }
 
   if (family === ipv4) {
-    for (const c of family.wellKnownClasses) {
-      if (_equal(c[0], encoded)) {
+    for (const c of family.wellKnownAddresses) {
+      const pl = c[1];
+      if (
+        pl > 0 &&
+        _prefix(family, c[0], pl) === _prefix(family, encoded, pl)
+      ) {
+        /*console.log(
+          c,
+          encoded,
+          _prefix(family, c[0], pl),
+          _prefix(family, encoded, pl),
+          prefixIP(c[0], pl),
+          prefixIP(encoded, pl)
+        );*/
         return c;
       }
     }
