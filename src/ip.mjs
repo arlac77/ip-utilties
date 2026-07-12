@@ -250,6 +250,11 @@ export function prefixIP(address, length) {
   return _decode(family, _prefix(family, address, length));
 }
 
+export function prefixOnlyIP(address, length) {
+  const family = _family(address);
+  return _decode(family, _prefix(family, address, length), length);
+}
+
 function _prefix(family, address, length) {
   return (
     _asBigInt(family, address) & (-1n << BigInt(family.bitLength - length))
