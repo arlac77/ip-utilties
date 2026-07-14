@@ -23,7 +23,7 @@ const ipv4 = {
 
   // https://www.geeksforgeeks.org/computer-networks/subnet-cheat-sheet/
   wellKnownAddresses: [
-    [new Uint8Array([169, 254, 0, 0]), 16], // Link-local address (Autoconfiguration)
+    [new Uint8Array([169, 254, 0, 0]), 16, true], // Link-local address (Autoconfiguration)
 
     [new Uint8Array([0, 0, 0, 0]), 8], // This network
     [new Uint8Array([10, 0, 0, 0]), 8], // Private network (RFC 1918)
@@ -62,7 +62,11 @@ const ipv6 = {
   base: 16,
   localHost: new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]),
   localHostPrefixLenth: 128,
-  wellKnownAddresses: [[new Uint16Array([0xfe80, 0, 0, 0, 0, 0, 0, 0]), 64]]
+  wellKnownAddresses: [
+    [new Uint16Array([0xfe80, 0, 0, 0, 0, 0, 0, 0]), 64, true],
+    [new Uint16Array([0xfd00, 0, 0, 0, 0, 0, 0, 0]), 8, false, true],
+    [new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]), 128, false, true]
+  ]
 };
 
 const families = [ipv4, ipv6];
@@ -416,14 +420,6 @@ export function wellKnownSubnet(address) {
 
 export function _wellKnownSubnet(family, address) {
   const encoded = _encode(family, address);
-
-  if (_equal(family.localHost, encoded)) {
-    return [family.localHost, family.localHostPrefixLenth];
-  }
-
-  if (_isUniqueLocal(encoded)) {
-    return [encoded[0], 64];
-  }
 
   for (const c of family.wellKnownAddresses) {
     const pl = c[1];
