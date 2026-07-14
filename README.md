@@ -11,6 +11,9 @@
 
 ip-v4/v6 utility functions
 
+- encoding / decoding
+- well known subnets
+  
 ## Three different representations
 
 ```javascript
