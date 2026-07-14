@@ -13,13 +13,13 @@
   },
   "description": "ip v4/v6 utility functions",
   "keywords": [
+    "address",
     "cidr",
     "ip",
     "ipv4",
     "ipv6",
     "network",
-    "subnet",
-    "address"
+    "subnet"
   ],
   "contributors": [
     {
@@ -42,10 +42,10 @@
   },
   "devDependencies": {
     "ava": "^8.0.1",
-    "browser-ava": "^2.3.66",
+    "browser-ava": "^2.3.67",
     "c8": "^11.0.0",
     "documentation": "^14.0.3",
-    "semantic-release": "^25.0.6",
+    "semantic-release": "^25.0.7",
     "typescript": "^7.0.2"
   },
   "overrides": {
