@@ -23,22 +23,24 @@ const ipv4 = {
 
   // https://www.geeksforgeeks.org/computer-networks/subnet-cheat-sheet/
   wellKnownAddresses: [
-    [new Uint8Array([169, 254, 0, 0]), 16, true], // Link-local address (Autoconfiguration)
+    // mask                            length, prefix, link local,
+    [new Uint8Array([169, 254, 0, 0]), /* */ 16, 16, true], // Link-local address (Autoconfiguration)
 
-    [new Uint8Array([0, 0, 0, 0]), 8], // This network
-    [new Uint8Array([10, 0, 0, 0]), 8], // Private network (RFC 1918)
-    [new Uint8Array([100, 64, 0, 0]), 10], // Carrier-grade NAT / Shared address space (CGN)
-    [new Uint8Array([127, 0, 0, 0]), 8], // Loopback
-    [new Uint8Array([127, 0, 53, 53]), 0], // Name collision occurrence
-    [new Uint8Array([172, 16, 0, 0]), 12], // Private network (RFC 1918)
-    [new Uint8Array([192, 0, 0, 0]), 24], // IETF protocol assignments
-    [new Uint8Array([192, 0, 2, 0]), 24], // TEST-NET-1
-    [new Uint8Array([192, 168, 0, 0]), 16], // Private network (RFC 1918)
-    [new Uint8Array([198, 18, 0, 0]), 15], // Network benchmark testing
-    [new Uint8Array([198, 51, 100, 0]), 24], // TEST-NET-2
-    [new Uint8Array([203, 0, 113, 0]), 24], // Reserved address space used for documentation
-    [new Uint8Array([240, 0, 0, 0]), 4], // Reserved for future use or experimental purposes
-    [new Uint8Array([255, 255, 255, 255]), 0] // Limited Broadcast address
+    [new Uint8Array([0, 0, 0, 0]), /*        */ 8, 8], // This network
+    [new Uint8Array([10, 0, 0, 0]), /*       */ 8, 8], // Private network (RFC 1918)
+    [new Uint8Array([100, 64, 0, 0]), /*    */ 10, 10], // Carrier-grade NAT / Shared address space (CGN)
+    [new Uint8Array([127, 0, 0, 0]), /*      */ 8, 8], // Loopback
+    [new Uint8Array([172, 16, 0, 0]), /*    */ 12, 12], // Private network (RFC 1918)
+    [new Uint8Array([192, 0, 0, 0]), /*     */ 24, 24], // IETF protocol assignments
+    [new Uint8Array([192, 0, 2, 0]), /*     */ 24, 24], // TEST-NET-1
+    [new Uint8Array([192, 168, 0, 0]), /*   */ 16, 16], // Private network (RFC 1918)
+    [new Uint8Array([198, 18, 0, 0]), /*    */ 15, 15], // Network benchmark testing
+    [new Uint8Array([198, 51, 100, 0]), /*  */ 24, 24], // TEST-NET-2
+    [new Uint8Array([203, 0, 113, 0]), /*   */ 24, 24], // Reserved address space used for documentation
+    [new Uint8Array([240, 0, 0, 0]), /*      */ 4, 4], // Reserved for future use or experimental purposes
+
+    [new Uint8Array([127, 0, 53, 53]), /*    */ 0, 0], // Name collision occurrence
+    [new Uint8Array([255, 255, 255, 255]), /**/ 0, 0] // Limited Broadcast address
   ]
 };
 
@@ -63,9 +65,10 @@ const ipv6 = {
   localHost: new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]),
   localHostPrefixLenth: 128,
   wellKnownAddresses: [
-    [new Uint16Array([0xfe80, 0, 0, 0, 0, 0, 0, 0]), 64, true],
-    [new Uint16Array([0xfd00, 0, 0, 0, 0, 0, 0, 0]), 8, false, true],
-    [new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]), 128, false, true]
+    [new Uint16Array([0xfe80, 0, 0, 0, 0, 0, 0, 0]), 64, 64, true],
+    [new Uint16Array([0xfd00, 0, 0, 0, 0, 0, 0, 0]), 8, 64, false, true],
+    [new Uint16Array([0xfc00, 0, 0, 0, 0, 0, 0, 0]), 7, 64, false, true],
+    [new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]), 128, 128, false, true]
   ]
 };
 
@@ -286,18 +289,19 @@ export function normalizeCIDR(address) {
   let longPrefix;
 
   const family = isIPv6(prefix) ? ipv6 : ipv4;
+  let encoded = _encode(family, prefix);
+  const wns = _wellKnownSubnet(family, encoded);
 
-  const wns = _wellKnownSubnet(family, address);
-  if (family === ipv4 && wns && !prefixLength) {
-    prefixLength = wns[1];
+  if (wns && !prefixLength) {
+    prefixLength = wns[2];
     prefix = _decode(
       family,
-      _prefix(family, wns[0], prefixLength),
+      _prefix(family, encoded, prefixLength),
       prefixLength
     );
-    longPrefix = wns[0];
+    longPrefix = _decode(family, wns[0]);
   } else {
-    if (isUniqueLocal(address) || _isLinkLocal(family, address)) {
+    if (_isUniqueLocal(encoded) || _isLinkLocal(family, encoded)) {
       prefixLength = family.wellKnownAddresses[0][1]; // TODO
       const n = _prefix(family, address, prefixLength);
       prefix = _decode(family, n, prefixLength);
@@ -312,19 +316,15 @@ export function normalizeCIDR(address) {
     } else {
       prefixLength = prefixLength === undefined ? 0 : parseInt(prefixLength);
 
-      let n;
-
       if (prefixLength) {
-        n = _prefix(family, prefix, prefixLength);
+        encoded = _prefix(family, prefix, prefixLength);
       } else {
-        n = _encode(family, prefix);
-
-        if (isLocalhost(n)) {
+        if (_isLocalhost(family, encoded)) {
           prefixLength = family.localHostPrefixLenth;
         }
       }
-      prefix = _decode(family, n, prefixLength);
-      longPrefix = _decode(family, n);
+      prefix = _decode(family, encoded, prefixLength);
+      longPrefix = _decode(family, encoded);
     }
   }
 
@@ -378,10 +378,14 @@ function _equal(a, b) {
   return true;
 }
 
+export function _isLocalhost(family, encoded) {
+  return _equal(family.localHost, encoded);
+}
+
 export function isLocalhost(address) {
   const family = _family(address);
   if (family) {
-    return _equal(family.localHost, _encode(family, address));
+    return _isLocalhost(family, _encode(family, address));
   }
   return false;
 }
@@ -389,7 +393,7 @@ export function isLocalhost(address) {
 export function isLinkLocal(address) {
   const family = _family(address);
   if (family) {
-    return _isLinkLocal(family, address);
+    return _isLinkLocal(family, _encode(family, address));
   }
   return false;
 }
@@ -414,13 +418,11 @@ export function hasWellKnownSubnet(address) {
 export function wellKnownSubnet(address) {
   const family = _family(address);
   if (family) {
-    return _wellKnownSubnet(family, address);
+    return _wellKnownSubnet(family, _encode(family, address));
   }
 }
 
-export function _wellKnownSubnet(family, address) {
-  const encoded = _encode(family, address);
-
+export function _wellKnownSubnet(family, encoded) {
   for (const c of family.wellKnownAddresses) {
     const pl = c[1];
     if (pl > 0 && _prefix(family, c[0], pl) === _prefix(family, encoded, pl)) {
@@ -439,7 +441,6 @@ export function _wellKnownSubnet(family, address) {
 
 /*
   prefix     global subnet interface
-
   ff01:: ff02::   1
   ff05::          2 3
 
