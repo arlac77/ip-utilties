@@ -219,6 +219,12 @@ function _is(family, address) {
       return (
         address instanceof family.factory && address.length === family.segments
       );
+
+    case "bigint": {
+      if (family === ipv6 && address > 1n << BigInt(ipv4.bitLength)) {
+        return true;
+      }
+    }
   }
 
   return false;

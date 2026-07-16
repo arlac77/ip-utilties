@@ -444,6 +444,9 @@ familyIPT.title = (providedTitle = "familyIP", address, expected) =>
 
 test(familyIPT, "1.2.3.4", "IPv4");
 test(familyIPT, "::1", "IPv6");
+test(familyIPT, 0x20010db8000000000001000000000001n, "IPv6"); //"2001:db8::1:0:0:1"
+test(familyIPT, new Uint16Array([0xfe80, 0, 0, 0, 0, 0, 0, 0]), "IPv6");
+test(familyIPT, new Uint8Array([1, 2, 3, 4]), "IPv4");
 test(familyIPT, "16", undefined);
 test(familyIPT, 17, undefined);
 test(familyIPT, "", undefined);
