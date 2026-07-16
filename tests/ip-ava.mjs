@@ -448,6 +448,8 @@ test(familyIPT, "16", undefined);
 test(familyIPT, 17, undefined);
 test(familyIPT, "", undefined);
 test(familyIPT, "some name", undefined);
+test(familyIPT, {}, undefined);
+test(familyIPT, false, undefined);
 
 function matchPrefixIPT(t, prefix, length, address, expected) {
   t.is(matchPrefixIP(prefix, length, address), expected);
