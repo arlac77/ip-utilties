@@ -304,7 +304,7 @@ export function normalizeCIDR(address) {
       _prefix(family, encoded, prefixLength),
       prefixLength
     );
-    longPrefix = _decode(family, wns[0]);
+    longPrefix = _decode(family, encoded);
   } else {
     prefixLength = prefixLength === undefined ? 0 : parseInt(prefixLength);
 
@@ -319,7 +319,8 @@ export function normalizeCIDR(address) {
     longPrefix,
     prefix,
     prefixLength,
-    cidr: `${prefix}/${prefixLength}`
+    cidr: `${prefix}/${prefixLength}`,
+    family: family.name
   };
 }
 

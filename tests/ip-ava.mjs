@@ -391,15 +391,15 @@ normalizeCIDRT.title = (providedTitle = "normalizeCIDR", address, cidr) =>
   `${providedTitle} ${address} => ${cidr}`.trim();
 
 test(normalizeCIDRT, "127/8", "127/8", "127.0.0.0", 8);
-test(normalizeCIDRT, "127.0.0.1", "127/8", "127.0.0.0", 8);
-test(normalizeCIDRT, "127.0.0.2", "127/8", "127.0.0.0", 8);
+test(normalizeCIDRT, "127.0.0.1", "127/8", "127.0.0.1", 8);
+test(normalizeCIDRT, "127.0.0.2", "127/8", "127.0.0.2", 8);
 test(normalizeCIDRT, "1.2.3.4/24", "1.2.3/24");
 test(normalizeCIDRT, "1.2.3.4/16", "1.2/16");
 test(normalizeCIDRT, "10.0/16", "10.0/16");
 test(normalizeCIDRT, "10", "10/8");
 test(normalizeCIDRT, "1.2.3.4/8", "1/8", undefined, 8);
 test(normalizeCIDRT, "1.2.3.4", "/0");
-test(normalizeCIDRT, "192.168.1.62/30", "192.168.1.60/30", "192.168.0.0", 30);
+test(normalizeCIDRT, "192.168.1.62/30", "192.168.1.60/30", "192.168.1.62", 30);
 test(normalizeCIDRT, "0.0.0.0/0", "/0", undefined, 0);
 test(normalizeCIDRT, "0.0.0.0", "0/8");
 test(normalizeCIDRT, "169.254.1.2", "169.254/16");
@@ -407,7 +407,7 @@ test(normalizeCIDRT, "169.254.1.2", "169.254/16");
 test(normalizeCIDRT, "fe80::/64", "fe80::/64", "fe80::");
 test(normalizeCIDRT, "fd00::", "fd00::/64", "fd00::");
 test(normalizeCIDRT, "fd9a:df8a:86ce:0:1:2:3", "fd9a:df8a:86ce:/64");
-test(normalizeCIDRT, "fd00:1:1:1::", "fd00:1:1:1/64", "fd00::");
+test(normalizeCIDRT, "fd00:1:1:1::", "fd00:1:1:1/64", "fd00:1:1:1::");
 test(normalizeCIDRT, "::/0", "/0");
 test(normalizeCIDRT, "::1", "::1/128", undefined, 128);
 
