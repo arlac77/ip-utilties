@@ -19,7 +19,6 @@ const ipv4 = {
   segmentMask: 0xffn,
   base: 10,
   localHost: new Uint8Array([127, 0, 0, 1]),
-  localHostPrefixLenth: 8,
 
   // https://www.geeksforgeeks.org/computer-networks/subnet-cheat-sheet/
   wellKnownAddresses: [
@@ -63,7 +62,6 @@ const ipv6 = {
   segmentMask: 0xffffn,
   base: 16,
   localHost: new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]),
-  localHostPrefixLenth: 128,
   wellKnownAddresses: [
     [new Uint16Array([0xfe80, 0, 0, 0, 0, 0, 0, 0]), 64, 64, true],
     [new Uint16Array([0xfd00, 0, 0, 0, 0, 0, 0, 0]), 8, 64, false, true],
@@ -299,7 +297,8 @@ export function normalizeCIDR(address) {
   const wns = _wellKnownSubnet(family, encoded);
 
   if (wns) {
-    prefixLength ||= wns[2];
+    prefixLength = prefixLength === undefined ? wns[2] : parseInt(prefixLength);
+
     prefix = _decode(
       family,
       _prefix(family, encoded, prefixLength),
@@ -311,10 +310,6 @@ export function normalizeCIDR(address) {
 
     if (prefixLength) {
       encoded = _prefix(family, prefix, prefixLength);
-    } else {
-      if (_isLocalhost(family, encoded)) {
-        prefixLength = family.localHostPrefixLenth;
-      }
     }
     prefix = _decode(family, encoded, prefixLength);
     longPrefix = _decode(family, encoded);
