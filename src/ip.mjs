@@ -298,8 +298,8 @@ export function normalizeCIDR(address) {
   let encoded = _encode(family, prefix);
   const wns = _wellKnownSubnet(family, encoded);
 
-  if (wns && !prefixLength) {
-    prefixLength = wns[2];
+  if (wns) {
+    prefixLength ||= wns[2];
     prefix = _decode(
       family,
       _prefix(family, encoded, prefixLength),
@@ -307,31 +307,17 @@ export function normalizeCIDR(address) {
     );
     longPrefix = _decode(family, wns[0]);
   } else {
-    if (_isUniqueLocal(encoded) || _isLinkLocal(family, encoded)) {
-      prefixLength = family.wellKnownAddresses[0][1]; // TODO
-      const n = _prefix(family, address, prefixLength);
-      prefix = _decode(family, n, prefixLength);
+    prefixLength = prefixLength === undefined ? 0 : parseInt(prefixLength);
 
-      if (family === ipv6) {
-        if (!prefix.endsWith("::")) {
-          // TODO
-          prefix += prefix.endsWith(":") ? ":" : "::";
-        }
-      }
-      longPrefix = prefix;
+    if (prefixLength) {
+      encoded = _prefix(family, prefix, prefixLength);
     } else {
-      prefixLength = prefixLength === undefined ? 0 : parseInt(prefixLength);
-
-      if (prefixLength) {
-        encoded = _prefix(family, prefix, prefixLength);
-      } else {
-        if (_isLocalhost(family, encoded)) {
-          prefixLength = family.localHostPrefixLenth;
-        }
+      if (_isLocalhost(family, encoded)) {
+        prefixLength = family.localHostPrefixLenth;
       }
-      prefix = _decode(family, encoded, prefixLength);
-      longPrefix = _decode(family, encoded);
     }
+    prefix = _decode(family, encoded, prefixLength);
+    longPrefix = _decode(family, encoded);
   }
 
   return {
