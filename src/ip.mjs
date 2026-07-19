@@ -22,24 +22,31 @@ const ipv4 = {
 
   // https://www.geeksforgeeks.org/computer-networks/subnet-cheat-sheet/
   wellKnownAddresses: [
-    // mask                            length, prefix, link local,
-    [new Uint8Array([169, 254, 0, 0]), /* */ 16, 16, true], // Link-local address (Autoconfiguration)
+    /*
+      mask
+      identifying prefix length
+      prefix length
+      link local             = 1  https://en.wikipedia.org/wiki/Link-local_address
+      loopback / localhost   = 2
+      unique local           = 3  https://en.wikipedia.org/wiki/Unique_local_address
+    */
+    [new Uint8Array([169, 254, 0, 0]), /*   */ 16, 16, 1], // Link-local address (Autoconfiguration)
 
-    [new Uint8Array([0, 0, 0, 0]), /*        */ 8, 8], // This network
-    [new Uint8Array([10, 0, 0, 0]), /*       */ 8, 8], // Private network (RFC 1918)
-    [new Uint8Array([100, 64, 0, 0]), /*    */ 10, 10], // Carrier-grade NAT / Shared address space (CGN)
-    [new Uint8Array([127, 0, 0, 0]), /*      */ 8, 8], // Loopback
-    [new Uint8Array([172, 16, 0, 0]), /*    */ 12, 12], // Private network (RFC 1918)
-    [new Uint8Array([192, 0, 0, 0]), /*     */ 24, 24], // IETF protocol assignments
-    [new Uint8Array([192, 0, 2, 0]), /*     */ 24, 24], // TEST-NET-1
-    [new Uint8Array([192, 168, 0, 0]), /*   */ 16, 16], // Private network (RFC 1918)
-    [new Uint8Array([198, 18, 0, 0]), /*    */ 15, 15], // Network benchmark testing
-    [new Uint8Array([198, 51, 100, 0]), /*  */ 24, 24], // TEST-NET-2
-    [new Uint8Array([203, 0, 113, 0]), /*   */ 24, 24], // Reserved address space used for documentation
-    [new Uint8Array([240, 0, 0, 0]), /*      */ 4, 4], // Reserved for future use or experimental purposes
+    [new Uint8Array([0, 0, 0, 0]), /*        */ 8, 8, 0], // This network
+    [new Uint8Array([10, 0, 0, 0]), /*       */ 8, 8, 0], // Private network (RFC 1918)
+    [new Uint8Array([100, 64, 0, 0]), /*    */ 10, 10, 0], // Carrier-grade NAT / Shared address space (CGN)
+    [new Uint8Array([127, 0, 0, 0]), /*      */ 8, 8, 2], // Loopback
+    [new Uint8Array([172, 16, 0, 0]), /*    */ 12, 12, 0], // Private network (RFC 1918)
+    [new Uint8Array([192, 0, 0, 0]), /*     */ 24, 24, 0], // IETF protocol assignments
+    [new Uint8Array([192, 0, 2, 0]), /*     */ 24, 24, 0], // TEST-NET-1
+    [new Uint8Array([192, 168, 0, 0]), /*   */ 16, 16, 0], // Private network (RFC 1918)
+    [new Uint8Array([198, 18, 0, 0]), /*    */ 15, 15, 0], // Network benchmark testing
+    [new Uint8Array([198, 51, 100, 0]), /*  */ 24, 24, 0], // TEST-NET-2
+    [new Uint8Array([203, 0, 113, 0]), /*   */ 24, 24, 0], // Reserved address space used for documentation
+    [new Uint8Array([240, 0, 0, 0]), /*      */ 4, 4, 0], // Reserved for future use or experimental purposes
 
-    [new Uint8Array([127, 0, 53, 53]), /*    */ 0, 0], // Name collision occurrence
-    [new Uint8Array([255, 255, 255, 255]), /**/ 0, 0] // Limited Broadcast address
+    [new Uint8Array([127, 0, 53, 53]), /*    */ 0, 0, 0], // Name collision occurrence
+    [new Uint8Array([255, 255, 255, 255]), /**/ 0, 0, 0] // Limited Broadcast address
   ]
 };
 
@@ -63,10 +70,10 @@ const ipv6 = {
   base: 16,
   localHost: new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]),
   wellKnownAddresses: [
-    [new Uint16Array([0xfe80, 0, 0, 0, 0, 0, 0, 0]), 64, 64, true],
-    [new Uint16Array([0xfd00, 0, 0, 0, 0, 0, 0, 0]), 8, 64, false, true],
-    [new Uint16Array([0xfc00, 0, 0, 0, 0, 0, 0, 0]), 7, 64, false, true],
-    [new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]), 128, 128, false, true]
+    [new Uint16Array([0xfe80, 0, 0, 0, 0, 0, 0, 0]), /**/ 64, 64, 1],
+    [new Uint16Array([0xfd00, 0, 0, 0, 0, 0, 0, 0]), /* */ 8, 64, 3],
+    [new Uint16Array([0xfc00, 0, 0, 0, 0, 0, 0, 0]), /* */ 7, 64, 3],
+    [new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]), /*.   */ 128, 128, 2]
   ]
 };
 
@@ -290,33 +297,29 @@ export function matchPrefixIP(prefix, length, address) {
 
 export function normalizeCIDR(address) {
   let [prefix, prefixLength] = address.split(/\//);
-  let longPrefix;
 
   const family = isIPv6(prefix) ? ipv6 : ipv4;
   let encoded = _encode(family, prefix);
   const wns = _wellKnownSubnet(family, encoded);
 
-  if (wns) {
-    prefixLength = prefixLength === undefined ? wns[2] : parseInt(prefixLength);
+  prefixLength =
+    prefixLength === undefined ? (wns?.[2] ?? 0) : parseInt(prefixLength);
 
+  if (wns) {
     prefix = _decode(
       family,
       _prefix(family, encoded, prefixLength),
-      prefixLength
+      family === ipv6 ? 128 : prefixLength
     );
-    longPrefix = _decode(family, encoded);
   } else {
-    prefixLength = prefixLength === undefined ? 0 : parseInt(prefixLength);
-
     if (prefixLength) {
       encoded = _prefix(family, prefix, prefixLength);
     }
     prefix = _decode(family, encoded, prefixLength);
-    longPrefix = _decode(family, encoded);
   }
 
   return {
-    longPrefix,
+    longPrefix: _decode(family, encoded),
     prefix,
     prefixLength,
     cidr: `${prefix}/${prefixLength}`,
@@ -387,7 +390,7 @@ export function isLinkLocal(address) {
 }
 
 export function _isLinkLocal(family, address) {
-  return _wellKnownSubnet(family, address) === family.wellKnownAddresses[0];
+  return _wellKnownSubnet(family, address)?.[3] === 1;
 }
 
 export function isUniqueLocal(address) {
@@ -414,38 +417,15 @@ export function _wellKnownSubnet(family, encoded) {
   for (const c of family.wellKnownAddresses) {
     const pl = c[1];
     if (pl > 0 && _prefix(family, c[0], pl) === _prefix(family, encoded, pl)) {
-      /*console.log(
-          c,
-          encoded,
-          _prefix(family, c[0], pl),
-          _prefix(family, encoded, pl),
-          prefixIP(c[0], pl),
-          prefixIP(encoded, pl)
-        );*/
       return c;
     }
   }
 }
 
-/*
+/**
   prefix     global subnet interface
   ff01:: ff02::   1
   ff05::          2 3
-
-  https://en.wikipedia.org/wiki/Link-local_address
-  fe80::          64       link local
-  169.254. /16             link local
-
-  https://en.wikipedia.org/wiki/Unique_local_address
-  fc00::          64       unique local
-  fd00::          64       unique local
-
-  ::1             128.     local host
-  127             8        local host
-  172
-*/
-
-/*
  * https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml
  */
 export const IPV6_NODE_LOCAL_ALL_NODES = _encode(ipv6, "ff01::1");
