@@ -3,6 +3,7 @@ import {
   wellKnownSubnet,
   hasWellKnownSubnet,
   isLocalhost,
+  isLoopback,
   isLinkLocal,
   isUniqueLocal,
   isIPv4,
@@ -96,6 +97,30 @@ test(isLocalhostT, true, false);
 test(isLocalhostT, undefined, false);
 test(isLocalhostT, null, false);
 test(isLocalhostT, {}, false);
+
+function isLoopbackT(t, address, expected) {
+  t.is(isLoopback(address), expected);
+}
+isLoopbackT.title = (providedTitle = "isLoopback", address, expected) =>
+  `${providedTitle} ${address} => ${expected}`.trim();
+
+test(isLoopbackT, IPV6_LOCALHOST, true);
+test(isLoopbackT, IPV4_LOCALHOST, true);
+test(isLoopbackT, "1.2.3.4", false);
+test(isLoopbackT, "1::2:3", false);
+test(isLoopbackT, "127.0.0.1", true);
+test(isLoopbackT, "::1", true);
+test(isLoopbackT, "::1%lo", true);
+test(isLoopbackT, "::1/127", true);
+test(isLoopbackT, "", false);
+test(isLoopbackT, 2, false);
+test(isLoopbackT, 3.14, false);
+test(isLoopbackT, 4n, false);
+test(isLoopbackT, false, false);
+test(isLoopbackT, true, false);
+test(isLoopbackT, undefined, false);
+test(isLoopbackT, null, false);
+test(isLoopbackT, {}, false);
 
 function isLinkLocalT(t, address, expected) {
   t.is(isLinkLocal(address), expected);

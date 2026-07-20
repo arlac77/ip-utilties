@@ -393,6 +393,19 @@ export function _isLinkLocal(family, address) {
   return _wellKnownSubnet(family, address)?.[3] === 1;
 }
 
+
+export function isLoopback(address) {
+  const family = _family(address);
+  if (family) {
+    return _isLoopback(family, _encode(family, address));
+  }
+  return false;
+}
+
+export function _isLoopback(family, address) {
+  return _wellKnownSubnet(family, address)?.[3] === 2;
+}
+
 export function isUniqueLocal(address) {
   const eaddr = encodeIP(address);
   return eaddr?.[0] >> 9 === 126 ? true : false;
