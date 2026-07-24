@@ -328,31 +328,34 @@ test(
 );
 test(reverseArpaT, "1.2.3.4", "4.3.2.1.in-addr.arpa");
 
-function wellKnownSubnetT(t, address, prefix, length) {
+function wellKnownSubnetT(t, address, prefix, idLength, length) {
   t.is(hasWellKnownSubnet(address), prefix !== undefined, address);
 
   if (prefix) {
-    const [p, l] = wellKnownSubnet(address);
-    t.is(l, length, "length");
+    const [p, id, l] = wellKnownSubnet(address);
     t.is(prefixOnlyIP(p, l), prefix);
+    t.is(id, idLength, "identifier length");
+    t.is(l, length, "length");
   }
 }
 wellKnownSubnetT.title = (
   providedTitle = "wellKnownSubnet",
   address,
   prefix,
+  idLength,
   length
 ) => `${providedTitle} ${address} => ${prefix}/${length}`.trim();
 
-test(wellKnownSubnetT, "::1", "::1", 128);
-test(wellKnownSubnetT, "127.0.0.1", "127", 8);
+test(wellKnownSubnetT, "::1", "::1", 128, 128);
+test(wellKnownSubnetT, "127.0.0.1", "127", 8, 8);
 test(wellKnownSubnetT, "1.2.3.4");
-test(wellKnownSubnetT, "10.0.0.1", "10", 8);
-test(wellKnownSubnetT, "172.16.1.2", "172.16", 12);
-test(wellKnownSubnetT, "192.168.1.2", "192.168", 16);
-test(wellKnownSubnetT, "192.0.2.7", "192.0.2", 24);
-test(wellKnownSubnetT, "fe80::1e57:3eff:fe22:9a8f", "fe80::", 64);
-test(wellKnownSubnetT, "fd00::1", "fd00", 8);
+test(wellKnownSubnetT, "10.0.0.1", "10", 8, 8);
+test(wellKnownSubnetT, "172.16.1.2", "172.16", 12, 12);
+test(wellKnownSubnetT, "192.168.1.2", "192.168", 16, 16);
+test(wellKnownSubnetT, "192.0.2.7", "192.0.2", 24, 24);
+test(wellKnownSubnetT, "fe80::1e57:3eff:fe22:9a8f", "fe80::", 16, 64);
+test(wellKnownSubnetT, "fd00::1", "fd00::", 8, 64);
+test.only(wellKnownSubnetT, "ff01::1", "ff00::1", 12, 128);
 
 function normalizeIPT(t, address, expected) {
   t.is(normalizeIP(address), expected);

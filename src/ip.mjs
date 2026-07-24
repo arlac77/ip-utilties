@@ -70,10 +70,18 @@ const ipv6 = {
   base: 16,
   localHost: new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]),
   wellKnownAddresses: [
-    [new Uint16Array([0xfe80, 0, 0, 0, 0, 0, 0, 0]), /**/ 64, 64, 1],
+    [new Uint16Array([0xfe80, 0, 0, 0, 0, 0, 0, 0]), /**/ 16, 64, 1],
     [new Uint16Array([0xfd00, 0, 0, 0, 0, 0, 0, 0]), /* */ 8, 64, 3],
     [new Uint16Array([0xfc00, 0, 0, 0, 0, 0, 0, 0]), /* */ 7, 64, 3],
-    [new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]), /*.   */ 128, 128, 2]
+    [new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]), /*    */ 128, 128, 2],
+
+    /**
+     * https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml
+     */
+    [new Uint16Array([0xff00, 0, 0, 0, 0, 0, 0, 1]), 12, 128, "nodes"],
+    [new Uint16Array([0xff00, 0, 0, 0, 0, 0, 0, 2]), 12, 128, "routers"],
+    [new Uint16Array([0xff00, 0, 0, 0, 0, 0, 0, 0xfb]), 12, 128, "mDNSv6"],
+    [new Uint16Array([0xff00, 0, 0, 0, 0, 0, 1, 3]), 12, 128, "dhcp"]
   ]
 };
 
@@ -393,7 +401,6 @@ export function _isLinkLocal(family, address) {
   return _wellKnownSubnet(family, address)?.[3] === 1;
 }
 
-
 export function isLoopback(address) {
   const family = _family(address);
   if (family) {
@@ -434,19 +441,6 @@ export function _wellKnownSubnet(family, encoded) {
     }
   }
 }
-
-/**
-  prefix     global subnet interface
-  ff01:: ff02::   1
-  ff05::          2 3
- * https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml
- */
-export const IPV6_NODE_LOCAL_ALL_NODES = _encode(ipv6, "ff01::1");
-export const IPV6_NODE_LOCAL_ALL_ROUTERS = _encode(ipv6, "ff01::2");
-export const IPV6_LINK_LOCAL_ALL_NODES = _encode(ipv6, "ff02::1");
-export const IPV6_LINK_LOCAL_ALL_ROUTERS = _encode(ipv6, "ff02::2");
-export const IPV6_SITE_LOCAL_ALL_ROUTERS = _encode(ipv6, "ff05::2");
-export const IPV6_SITE_LOCAL_ALL_DHCP_SERVERS = _encode(ipv6, "ff05::1:3");
 
 export const IPV4_LOCALHOST = ipv4.localHost;
 export const IPV6_LOCALHOST = ipv6.localHost;
