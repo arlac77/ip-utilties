@@ -33,6 +33,13 @@ encodeIPv4("10.0.0.1") // -> 10n << 24n | 1n;
 
 *   [FAMILY\_IPV4](#family_ipv4)
 *   [FAMILY\_IPV6](#family_ipv6)
+*   [ADDRESS\_TYPE\_LOOPBACK](#address_type_loopback)
+*   [ADDRESS\_TYPE\_LINK\_LOCAL](#address_type_link_local)
+*   [ADDRESS\_TYPE\_UNIQUE\_LOCAL](#address_type_unique_local)
+*   [ADDRESS\_TYPE\_BROADCAST\_NODES](#address_type_broadcast_nodes)
+*   [ADDRESS\_TYPE\_BROADCAST\_ROUTERS](#address_type_broadcast_routers)
+*   [ADDRESS\_TYPE\_BROADCAST\_MDNSV6](#address_type_broadcast_mdnsv6)
+*   [ADDRESS\_TYPE\_BROADCAST\_DHCP](#address_type_broadcast_dhcp)
 *   [Uint16Array](#uint16array)
 *   [encodeIP](#encodeip)
     *   [Parameters](#parameters)
@@ -52,6 +59,38 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 ## FAMILY\_IPV6
 
 Address familiy IPv6
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## ADDRESS\_TYPE\_LOOPBACK
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## ADDRESS\_TYPE\_LINK\_LOCAL
+
+<https://en.wikipedia.org/wiki/Link-local_address>
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## ADDRESS\_TYPE\_UNIQUE\_LOCAL
+
+<https://en.wikipedia.org/wiki/Unique_local_address>
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## ADDRESS\_TYPE\_BROADCAST\_NODES
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## ADDRESS\_TYPE\_BROADCAST\_ROUTERS
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## ADDRESS\_TYPE\_BROADCAST\_MDNSV6
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## ADDRESS\_TYPE\_BROADCAST\_DHCP
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
