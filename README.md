@@ -33,6 +33,7 @@ encodeIPv4("10.0.0.1") // -> 10n << 24n | 1n;
 
 *   [FAMILY\_IPV4](#family_ipv4)
 *   [FAMILY\_IPV6](#family_ipv6)
+*   [Uint16Array](#uint16array)
 *   [encodeIP](#encodeip)
     *   [Parameters](#parameters)
 *   [encodeIPv6](#encodeipv6)
@@ -41,7 +42,6 @@ encodeIPv4("10.0.0.1") // -> 10n << 24n | 1n;
     *   [Parameters](#parameters-2)
 *   [familyIP](#familyip)
     *   [Parameters](#parameters-3)
-*   [IPV6\_NODE\_LOCAL\_ALL\_NODES](#ipv6_node_local_all_nodes)
 
 ## FAMILY\_IPV4
 
@@ -54,6 +54,10 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 Address familiy IPv6
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## Uint16Array
+
+<https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml>
 
 ## encodeIP
 
@@ -91,16 +95,9 @@ IP address family for a given address.
 
 ### Parameters
 
-*   `address` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [Uint8Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array) | [Uint16Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array))**&#x20;
+*   `address` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [Uint8Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array) | [Uint16Array](#uint16array))**&#x20;
 
 Returns **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined))**&#x20;
-
-## IPV6\_NODE\_LOCAL\_ALL\_NODES
-
-prefix     global subnet interface
-ff01:: ff02::   1
-ff05::          2 3
-<https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml>
 
 # install
 
