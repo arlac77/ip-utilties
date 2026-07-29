@@ -8,6 +8,36 @@ export const FAMILY_IPV4 = "IPv4";
  */
 export const FAMILY_IPV6 = "IPv6";
 
+/**
+ */
+export const ADDRESS_TYPE_LOOPBACK = "lb";
+
+/**
+ * https://en.wikipedia.org/wiki/Link-local_address
+ */
+export const ADDRESS_TYPE_LINK_LOCAL = "ll";
+
+/**
+ * https://en.wikipedia.org/wiki/Unique_local_address
+ */
+export const ADDRESS_TYPE_UNIQUE_LOCAL = "ul";
+
+/**
+ */
+export const ADDRESS_TYPE_BROADCAST_NODES = "bn";
+
+/**
+ */
+export const ADDRESS_TYPE_BROADCAST_ROUTERS = "br";
+
+/**
+ */
+export const ADDRESS_TYPE_BROADCAST_MDNSV6 = "mdnsv6";
+
+/**
+ */
+export const ADDRESS_TYPE_BROADCAST_DHCP = "dhcp";
+
 const ipv4 = {
   name: FAMILY_IPV4,
   factory: Uint8Array,
@@ -26,16 +56,14 @@ const ipv4 = {
       mask
       identifying prefix length
       prefix length
-      link local             = 1  https://en.wikipedia.org/wiki/Link-local_address
-      loopback / localhost   = 2
-      unique local           = 3  https://en.wikipedia.org/wiki/Unique_local_address
+      type
     */
-    [new Uint8Array([169, 254, 0, 0]), /*   */ 16, 16, 1], // Link-local address (Autoconfiguration)
+    [new Uint8Array([169, 254, 0, 0]), /*   */ 16, 16, ADDRESS_TYPE_LINK_LOCAL], // Link-local address (Autoconfiguration)
 
     [new Uint8Array([0, 0, 0, 0]), /*        */ 8, 8, 0], // This network
     [new Uint8Array([10, 0, 0, 0]), /*       */ 8, 8, 0], // Private network (RFC 1918)
     [new Uint8Array([100, 64, 0, 0]), /*    */ 10, 10, 0], // Carrier-grade NAT / Shared address space (CGN)
-    [new Uint8Array([127, 0, 0, 0]), /*      */ 8, 8, 2], // Loopback
+    [new Uint8Array([127, 0, 0, 0]), /*      */ 8, 8, ADDRESS_TYPE_LOOPBACK], // Loopback
     [new Uint8Array([172, 16, 0, 0]), /*    */ 12, 12, 0], // Private network (RFC 1918)
     [new Uint8Array([192, 0, 0, 0]), /*     */ 24, 24, 0], // IETF protocol assignments
     [new Uint8Array([192, 0, 2, 0]), /*     */ 24, 24, 0], // TEST-NET-1
@@ -70,18 +98,58 @@ const ipv6 = {
   base: 16,
   localHost: new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]),
   wellKnownAddresses: [
-    [new Uint16Array([0xfe80, 0, 0, 0, 0, 0, 0, 0]), /**/ 16, 64, 1],
-    [new Uint16Array([0xfd00, 0, 0, 0, 0, 0, 0, 0]), /* */ 8, 64, 3],
-    [new Uint16Array([0xfc00, 0, 0, 0, 0, 0, 0, 0]), /* */ 7, 64, 3],
-    [new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]), /*    */ 128, 128, 2],
+    [
+      new Uint16Array([0xfe80, 0, 0, 0, 0, 0, 0, 0]),
+      /**/ 16,
+      64,
+      ADDRESS_TYPE_LINK_LOCAL
+    ],
+    [
+      new Uint16Array([0xfd00, 0, 0, 0, 0, 0, 0, 0]),
+      /* */ 8,
+      64,
+      ADDRESS_TYPE_UNIQUE_LOCAL
+    ],
+    [
+      new Uint16Array([0xfc00, 0, 0, 0, 0, 0, 0, 0]),
+      /* */ 7,
+      64,
+      ADDRESS_TYPE_UNIQUE_LOCAL
+    ],
+    [
+      new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]),
+      /*    */ 128,
+      128,
+      ADDRESS_TYPE_LOOPBACK
+    ],
 
     /**
      * https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml
      */
-    [new Uint16Array([0xff00, 0, 0, 0, 0, 0, 0, 1]), 12, 128, "nodes"],
-    [new Uint16Array([0xff00, 0, 0, 0, 0, 0, 0, 2]), 12, 128, "routers"],
-    [new Uint16Array([0xff00, 0, 0, 0, 0, 0, 0, 0xfb]), 12, 128, "mDNSv6"],
-    [new Uint16Array([0xff00, 0, 0, 0, 0, 0, 1, 3]), 12, 128, "dhcp"]
+    [
+      new Uint16Array([0xff00, 0, 0, 0, 0, 0, 0, 1]),
+      12,
+      128,
+      ADDRESS_TYPE_BROADCAST_NODES
+    ],
+    [
+      new Uint16Array([0xff00, 0, 0, 0, 0, 0, 0, 2]),
+      12,
+      128,
+      ADDRESS_TYPE_BROADCAST_ROUTERS
+    ],
+    [
+      new Uint16Array([0xff00, 0, 0, 0, 0, 0, 0, 0xfb]),
+      12,
+      128,
+      ADDRESS_TYPE_BROADCAST_MDNSV6
+    ],
+    [
+      new Uint16Array([0xff00, 0, 0, 0, 0, 0, 1, 3]),
+      12,
+      128,
+      ADDRESS_TYPE_BROADCAST_DHCP
+    ]
   ]
 };
 
@@ -398,7 +466,7 @@ export function isLinkLocal(address) {
 }
 
 export function _isLinkLocal(family, address) {
-  return _wellKnownSubnet(family, address)?.[3] === 1;
+  return _wellKnownSubnet(family, address)?.[3] === ADDRESS_TYPE_LINK_LOCAL;
 }
 
 export function isLoopback(address) {
@@ -410,16 +478,19 @@ export function isLoopback(address) {
 }
 
 export function _isLoopback(family, address) {
-  return _wellKnownSubnet(family, address)?.[3] === 2;
+  return _wellKnownSubnet(family, address)?.[3] === ADDRESS_TYPE_LOOPBACK;
 }
 
 export function isUniqueLocal(address) {
-  const eaddr = encodeIP(address);
-  return eaddr?.[0] >> 9 === 126 ? true : false;
+  const family = _family(address);
+  if (family) {
+    return _isUniqueLocal(family, _encode(family, address));
+  }
+  return false;
 }
 
-export function _isUniqueLocal(eaddr) {
-  return eaddr?.[0] >> 9 === 126 ? true : false;
+export function _isUniqueLocal(family, eaddr) {
+  return _wellKnownSubnet(family, eaddr)?.[3] === ADDRESS_TYPE_UNIQUE_LOCAL;
 }
 
 export function hasWellKnownSubnet(address) {

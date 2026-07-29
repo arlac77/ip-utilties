@@ -355,7 +355,7 @@ test(wellKnownSubnetT, "192.168.1.2", "192.168", 16, 16);
 test(wellKnownSubnetT, "192.0.2.7", "192.0.2", 24, 24);
 test(wellKnownSubnetT, "fe80::1e57:3eff:fe22:9a8f", "fe80::", 16, 64);
 test(wellKnownSubnetT, "fd00::1", "fd00::", 8, 64);
-test.only(wellKnownSubnetT, "ff01::1", "ff00::1", 12, 128);
+test(wellKnownSubnetT, "ff01::1", "ff00::1", 12, 128);
 
 function normalizeIPT(t, address, expected) {
   t.is(normalizeIP(address), expected);
