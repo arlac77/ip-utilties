@@ -38,6 +38,11 @@ export const ADDRESS_TYPE_BROADCAST_MDNSV6 = "mdnsv6";
  */
 export const ADDRESS_TYPE_BROADCAST_DHCP = "dhcp";
 
+/**
+ * https://docs.netgate.com/pfsense/en/latest/network/ipv6/nat64.html#nat64
+ */
+export const ADDRESS_TYPE_NAT64 = "nat64";
+
 const ipv4 = {
   name: FAMILY_IPV4,
   factory: Uint8Array,
@@ -100,25 +105,25 @@ const ipv6 = {
   wellKnownAddresses: [
     [
       new Uint16Array([0xfe80, 0, 0, 0, 0, 0, 0, 0]),
-      /**/ 16,
+      16,
       64,
       ADDRESS_TYPE_LINK_LOCAL
     ],
     [
       new Uint16Array([0xfd00, 0, 0, 0, 0, 0, 0, 0]),
-      /* */ 8,
+      8,
       64,
       ADDRESS_TYPE_UNIQUE_LOCAL
     ],
     [
       new Uint16Array([0xfc00, 0, 0, 0, 0, 0, 0, 0]),
-      /* */ 7,
+      7,
       64,
       ADDRESS_TYPE_UNIQUE_LOCAL
     ],
     [
       new Uint16Array([0, 0, 0, 0, 0, 0, 0, 1]),
-      /*    */ 128,
+      128,
       128,
       ADDRESS_TYPE_LOOPBACK
     ],
@@ -149,6 +154,12 @@ const ipv6 = {
       12,
       128,
       ADDRESS_TYPE_BROADCAST_DHCP
+    ],
+    [
+      new Uint16Array([0x64, 0xff9b, 0, 0, 0, 0, 0, 0]),
+      32,
+      96,
+      ADDRESS_TYPE_NAT64
     ]
   ]
 };
