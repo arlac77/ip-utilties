@@ -40,6 +40,7 @@ encodeIPv4("10.0.0.1") // -> 10n << 24n | 1n;
 *   [ADDRESS\_TYPE\_BROADCAST\_ROUTERS](#address_type_broadcast_routers)
 *   [ADDRESS\_TYPE\_BROADCAST\_MDNSV6](#address_type_broadcast_mdnsv6)
 *   [ADDRESS\_TYPE\_BROADCAST\_DHCP](#address_type_broadcast_dhcp)
+*   [ADDRESS\_TYPE\_NAT64](#address_type_nat64)
 *   [Uint16Array](#uint16array)
 *   [encodeIP](#encodeip)
     *   [Parameters](#parameters)
@@ -91,6 +92,12 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ## ADDRESS\_TYPE\_BROADCAST\_DHCP
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## ADDRESS\_TYPE\_NAT64
+
+<https://docs.netgate.com/pfsense/en/latest/network/ipv6/nat64.html#nat64>
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
