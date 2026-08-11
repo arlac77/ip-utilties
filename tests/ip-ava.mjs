@@ -2,6 +2,7 @@ import test from "ava";
 import {
   wellKnownSubnet,
   hasWellKnownSubnet,
+  addressType,
   isLocalhost,
   isLoopback,
   isLinkLocal,
@@ -25,7 +26,9 @@ import {
   reverseArpa,
   matchPrefixIP,
   IPV4_LOCALHOST,
-  IPV6_LOCALHOST
+  IPV6_LOCALHOST,
+  ADDRESS_TYPE_LOOPBACK,
+  ADDRESS_TYPE_LINK_LOCAL
 } from "../src/ip.mjs";
 
 test("IPV4_LOCALHOST", t =>
@@ -73,6 +76,16 @@ test(isIPv4T, new Uint8Array([1, 2, 3]), false);
 test(isIPv4T, "f:b:a:3::", false);
 test(isIPv6T, "f:b:a:3::", true);
 test.failing(isIPv6T, "f:b:a:3:0:0", false);
+
+function addressTypeT(t, address, expected) {
+  t.is(addressType(address), expected);
+}
+addressTypeT.title = (providedTitle = "addressType", address, expected) =>
+  `${providedTitle} ${address} => ${expected}`.trim();
+
+test(addressTypeT, "127.0.0.1", ADDRESS_TYPE_LOOPBACK);
+test(addressTypeT, "::1", ADDRESS_TYPE_LOOPBACK);
+test(addressTypeT, "fe80:::1e57:3eff:fe22:9a8f", ADDRESS_TYPE_LINK_LOCAL);
 
 function isLocalhostT(t, address, expected) {
   t.is(isLocalhost(address), expected);

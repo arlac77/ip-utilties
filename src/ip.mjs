@@ -32,11 +32,11 @@ export const ADDRESS_TYPE_BROADCAST_ROUTERS = "br";
 
 /**
  */
-export const ADDRESS_TYPE_BROADCAST_MDNSV6 = "mdnsv6";
+export const ADDRESS_TYPE_BROADCAST_MDNSV6 = "bmdnsv6";
 
 /**
  */
-export const ADDRESS_TYPE_BROADCAST_DHCP = "dhcp";
+export const ADDRESS_TYPE_BROADCAST_DHCP = "bdhcp";
 
 /**
  * https://docs.netgate.com/pfsense/en/latest/network/ipv6/nat64.html#nat64
@@ -512,6 +512,13 @@ export function wellKnownSubnet(address) {
   const family = _family(address);
   if (family) {
     return _wellKnownSubnet(family, _encode(family, address));
+  }
+}
+
+export function addressType(address) {
+  const family = _family(address);
+  if (family) {
+    return _wellKnownSubnet(family, _encode(family, address))?.[3];
   }
 }
 
