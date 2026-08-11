@@ -28,7 +28,8 @@ import {
   IPV4_LOCALHOST,
   IPV6_LOCALHOST,
   ADDRESS_TYPE_LOOPBACK,
-  ADDRESS_TYPE_LINK_LOCAL
+  ADDRESS_TYPE_LINK_LOCAL,
+  ADDRESS_TYPE_UNIQUE_LOCAL
 } from "../src/ip.mjs";
 
 test("IPV4_LOCALHOST", t =>
@@ -86,6 +87,8 @@ addressTypeT.title = (providedTitle = "addressType", address, expected) =>
 test(addressTypeT, "127.0.0.1", ADDRESS_TYPE_LOOPBACK);
 test(addressTypeT, "::1", ADDRESS_TYPE_LOOPBACK);
 test(addressTypeT, "fe80:::1e57:3eff:fe22:9a8f", ADDRESS_TYPE_LINK_LOCAL);
+test(addressTypeT, "169.254.1.2", ADDRESS_TYPE_LINK_LOCAL);
+test(addressTypeT, "fc00::1", ADDRESS_TYPE_UNIQUE_LOCAL);
 
 function isLocalhostT(t, address, expected) {
   t.is(isLocalhost(address), expected);
