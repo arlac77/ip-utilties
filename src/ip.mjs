@@ -10,6 +10,19 @@ export const FAMILY_IPV6 = "IPv6";
 
 /**
  */
+export const ADDRESS_TYPE_GENERAL = "";
+
+/**
+ */
+export const ADDRESS_TYPE_DOCUMENTATION = "doc";
+
+/**
+ *
+ */
+export const ADDRESS_TYPE_TEST = "test";
+
+/**
+ */
 export const ADDRESS_TYPE_LOOPBACK = "lb";
 
 /**
@@ -65,18 +78,23 @@ const ipv4 = {
     */
     [new Uint8Array([169, 254, 0, 0]), /*   */ 16, 16, ADDRESS_TYPE_LINK_LOCAL], // Link-local address (Autoconfiguration)
 
-    [new Uint8Array([0, 0, 0, 0]), /*        */ 8, 8, 0], // This network
-    [new Uint8Array([10, 0, 0, 0]), /*       */ 8, 8, 0], // Private network (RFC 1918)
-    [new Uint8Array([100, 64, 0, 0]), /*    */ 10, 10, 0], // Carrier-grade NAT / Shared address space (CGN)
+    [new Uint8Array([0, 0, 0, 0]), /*        */ 8, 8, ADDRESS_TYPE_GENERAL], // This network
+    [new Uint8Array([10, 0, 0, 0]), /*       */ 8, 8, ADDRESS_TYPE_GENERAL], // Private network (RFC 1918)
+    [new Uint8Array([100, 64, 0, 0]), /*    */ 10, 10, ADDRESS_TYPE_GENERAL], // Carrier-grade NAT / Shared address space (CGN)
     [new Uint8Array([127, 0, 0, 0]), /*      */ 8, 8, ADDRESS_TYPE_LOOPBACK], // Loopback
-    [new Uint8Array([172, 16, 0, 0]), /*    */ 12, 12, 0], // Private network (RFC 1918)
-    [new Uint8Array([192, 0, 0, 0]), /*     */ 24, 24, 0], // IETF protocol assignments
-    [new Uint8Array([192, 0, 2, 0]), /*     */ 24, 24, 0], // TEST-NET-1
-    [new Uint8Array([192, 168, 0, 0]), /*   */ 16, 16, 0], // Private network (RFC 1918)
-    [new Uint8Array([198, 18, 0, 0]), /*    */ 15, 15, 0], // Network benchmark testing
-    [new Uint8Array([198, 51, 100, 0]), /*  */ 24, 24, 0], // TEST-NET-2
-    [new Uint8Array([203, 0, 113, 0]), /*   */ 24, 24, 0], // Reserved address space used for documentation
-    [new Uint8Array([240, 0, 0, 0]), /*      */ 4, 4, 0], // Reserved for future use or experimental purposes
+    [new Uint8Array([172, 16, 0, 0]), /*    */ 12, 12, ADDRESS_TYPE_GENERAL], // Private network (RFC 1918)
+    [new Uint8Array([192, 0, 0, 0]), /*     */ 24, 24, ADDRESS_TYPE_GENERAL], // IETF protocol assignments
+    [new Uint8Array([192, 0, 2, 0]), /*     */ 24, 24, ADDRESS_TYPE_TEST], // TEST-NET-1
+    [new Uint8Array([192, 168, 0, 0]), /*   */ 16, 16, ADDRESS_TYPE_GENERAL], // Private network (RFC 1918)
+    [new Uint8Array([198, 18, 0, 0]), /*    */ 15, 15, ADDRESS_TYPE_TEST], // Network benchmark testing
+    [new Uint8Array([198, 51, 100, 0]), /*  */ 24, 24, ADDRESS_TYPE_TEST], // TEST-NET-2
+    [
+      new Uint8Array([203, 0, 113, 0]),
+      /*   */ 24,
+      24,
+      ADDRESS_TYPE_DOCUMENTATION
+    ], // Reserved address space used for documentation
+    [new Uint8Array([240, 0, 0, 0]), /*      */ 4, 4, ADDRESS_TYPE_GENERAL], // Reserved for future use or experimental purposes
 
     [new Uint8Array([127, 0, 53, 53]), /*    */ 0, 0, 0], // Name collision occurrence
     [new Uint8Array([255, 255, 255, 255]), /**/ 0, 0, 0] // Limited Broadcast address
@@ -128,6 +146,15 @@ const ipv6 = {
       ADDRESS_TYPE_LOOPBACK
     ],
 
+    /**
+     * RFC 3849
+     */
+    [
+      new Uint16Array([0x2001, 0x0db8, 0, 0, 0, 0, 0, 0]),
+      32,
+      32,
+      ADDRESS_TYPE_DOCUMENTATION
+    ],
     /**
      * https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml
      */

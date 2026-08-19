@@ -29,7 +29,8 @@ import {
   IPV6_LOCALHOST,
   ADDRESS_TYPE_LOOPBACK,
   ADDRESS_TYPE_LINK_LOCAL,
-  ADDRESS_TYPE_UNIQUE_LOCAL
+  ADDRESS_TYPE_UNIQUE_LOCAL,
+  ADDRESS_TYPE_DOCUMENTATION
 } from "../src/ip.mjs";
 
 test("IPV4_LOCALHOST", t =>
@@ -89,6 +90,7 @@ test(addressTypeT, "::1", ADDRESS_TYPE_LOOPBACK);
 test(addressTypeT, "fe80:::1e57:3eff:fe22:9a8f", ADDRESS_TYPE_LINK_LOCAL);
 test(addressTypeT, "169.254.1.2", ADDRESS_TYPE_LINK_LOCAL);
 test(addressTypeT, "fc00::1", ADDRESS_TYPE_UNIQUE_LOCAL);
+test(addressTypeT, "2001:DB8::1:2:3:4", ADDRESS_TYPE_DOCUMENTATION);
 
 function isLocalhostT(t, address, expected) {
   t.is(isLocalhost(address), expected);
@@ -454,7 +456,13 @@ test(normalizeCIDRT, "fd9a:df8a:86ce:0:1:2:3", "fd9a:df8a:86ce::/64");
 test(normalizeCIDRT, "fd00:1:1:1::", "fd00:1:1:1::/64", "fd00:1:1:1::");
 test(normalizeCIDRT, "::/0", "/0");
 test(normalizeCIDRT, "::1", "::1/128", undefined, 128);
-test(normalizeCIDRT, "64:ff9b:0:0:1:2:0:0", "64:ff9b::1:2:0:0/96", undefined, 96);
+test(
+  normalizeCIDRT,
+  "64:ff9b:0:0:1:2:0:0",
+  "64:ff9b::1:2:0:0/96",
+  undefined,
+  96
+);
 
 function rangeIPT(t, address, prefix, l, u, expectedFrom, expectedTo) {
   const [from, to] = rangeIP(address, prefix, l, u);
