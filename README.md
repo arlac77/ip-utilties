@@ -33,6 +33,9 @@ encodeIPv4("10.0.0.1") // -> 10n << 24n | 1n;
 
 *   [FAMILY\_IPV4](#family_ipv4)
 *   [FAMILY\_IPV6](#family_ipv6)
+*   [ADDRESS\_TYPE\_GENERAL](#address_type_general)
+*   [ADDRESS\_TYPE\_DOCUMENTATION](#address_type_documentation)
+*   [ADDRESS\_TYPE\_TEST](#address_type_test)
 *   [ADDRESS\_TYPE\_LOOPBACK](#address_type_loopback)
 *   [ADDRESS\_TYPE\_LINK\_LOCAL](#address_type_link_local)
 *   [ADDRESS\_TYPE\_UNIQUE\_LOCAL](#address_type_unique_local)
@@ -42,6 +45,7 @@ encodeIPv4("10.0.0.1") // -> 10n << 24n | 1n;
 *   [ADDRESS\_TYPE\_BROADCAST\_DHCP](#address_type_broadcast_dhcp)
 *   [ADDRESS\_TYPE\_NAT64](#address_type_nat64)
 *   [Uint16Array](#uint16array)
+*   [Uint16Array](#uint16array-1)
 *   [encodeIP](#encodeip)
     *   [Parameters](#parameters)
 *   [encodeIPv6](#encodeipv6)
@@ -60,6 +64,18 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 ## FAMILY\_IPV6
 
 Address familiy IPv6
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## ADDRESS\_TYPE\_GENERAL
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## ADDRESS\_TYPE\_DOCUMENTATION
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## ADDRESS\_TYPE\_TEST
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
@@ -100,6 +116,10 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 <https://docs.netgate.com/pfsense/en/latest/network/ipv6/nat64.html#nat64>
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## Uint16Array
+
+RFC 3849
 
 ## Uint16Array
 
