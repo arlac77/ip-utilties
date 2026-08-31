@@ -89,6 +89,7 @@ test(addressTypeT, "127.0.0.1", ADDRESS_TYPE_LOOPBACK);
 test(addressTypeT, "::1", ADDRESS_TYPE_LOOPBACK);
 test(addressTypeT, "fe80:::1e57:3eff:fe22:9a8f", ADDRESS_TYPE_LINK_LOCAL);
 test(addressTypeT, "169.254.1.2", ADDRESS_TYPE_LINK_LOCAL);
+test(addressTypeT, "169.254.10.69", ADDRESS_TYPE_LINK_LOCAL);
 test(addressTypeT, "fc00::1", ADDRESS_TYPE_UNIQUE_LOCAL);
 test(addressTypeT, "2001:DB8::1:2:3:4", ADDRESS_TYPE_DOCUMENTATION);
 
