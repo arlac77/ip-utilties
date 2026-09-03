@@ -393,12 +393,16 @@ function _prefix(family, address, length) {
 
 export function rangeIP(address, prefix, lowerAdd = 0, upperReduce = 0) {
   const family = _family(address);
-  const from = _prefix(family, address, prefix);
-  const to = from | ((1n << BigInt(family.bitLength - prefix)) - 1n);
-  return [
-    _encode(family, from + BigInt(lowerAdd)),
-    _encode(family, to - BigInt(upperReduce))
-  ];
+  if (family) {
+    const from = _prefix(family, address, prefix);
+    const to = from | ((1n << BigInt(family.bitLength - prefix)) - 1n);
+    return [
+      _encode(family, from + BigInt(lowerAdd)),
+      _encode(family, to - BigInt(upperReduce))
+    ];
+  }
+
+  return [];
 }
 
 export function matchPrefixIP(prefix, length, address) {

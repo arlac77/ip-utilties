@@ -467,8 +467,14 @@ test(
 
 function rangeIPT(t, address, prefix, l, u, expectedFrom, expectedTo) {
   const [from, to] = rangeIP(address, prefix, l, u);
-  t.is(decodeIP(from), expectedFrom);
-  t.is(decodeIP(to), expectedTo);
+
+  if (expectedFrom === undefined) {
+    t.is(from, undefined);
+    t.is(to, undefined);
+  } else {
+    t.is(decodeIP(from), expectedFrom);
+    t.is(decodeIP(to), expectedTo);
+  }
 }
 rangeIPT.title = (
   providedTitle = "rangeIP",
@@ -487,6 +493,7 @@ test(rangeIPT, "192.168.1.7", 16, 0, 0, "192.168.0.0", "192.168.255.255");
 test(rangeIPT, "192.168.1.61", 30, 0, 0, "192.168.1.60", "192.168.1.63");
 test(rangeIPT, "fe80::", 64, 0, 0, "fe80::", "fe80::ffff:ffff:ffff:ffff");
 test(rangeIPT, "fe80::", 96, 0, 0, "fe80::", "fe80::ffff:ffff");
+test(rangeIPT, "1", 96, 0, 0);
 
 function formatCIDRT(t, address, prefixLength, expected) {
   t.is(formatCIDR(address, prefixLength), expected);
